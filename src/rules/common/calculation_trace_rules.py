@@ -7,8 +7,6 @@ from src.facts import CalculationStep, OutputStatus
 
 
 class CalculationTraceRules:
-    engine_name = "calculation_trace_rules"
-
     def write_step_to_file(
         self,
         layer_index,
