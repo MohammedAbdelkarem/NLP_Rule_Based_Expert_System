@@ -15,6 +15,8 @@ The system is not an automatic architecture generator. The user chooses the laye
 7. GELU Activation Layer
 8. Position-wise Linear Layer
 9. Softmax Layer
+10. Audio Input Layer (Speech Module)
+11. Audio Framing + Windowing Layer (Speech Module)
 
 ## Current tensor notation
 
@@ -60,6 +62,8 @@ Position-wise Linear Layer with output score projection
 - `TensorShape` and `TensorDataType` were merged into `TensorInfo`.
 - `IntermediateTensor` is used only for grouped or complex layers.
 - Transformer-specific rules are under `src/rules/transformers/`.
+- Speech-specific rules are under `src/rules/speech/`.
+- Printing helpers were split by module under `src/utils/printing/`; `src/utils/print_helpers.py` remains as a compatibility facade.
 - ReLU, GELU, and Softmax are normal selectable activation layers under `src/rules/activations/`.
 - Feed-Forward Network is a grouped Transformer layer and asks the user whether to use ReLU or GELU internally.
 - Position-wise Linear is a standalone projection layer under `src/rules/projections/`.
@@ -98,15 +102,33 @@ src/
 │   │       ├── parameter_rules.py
 │   │       ├── calculation_rules.py
 │   │       └── output_rules.py
-│   └── projections/
+│   ├── projections/
+│   │   ├── compatibility/
+│   │   │   └── linear.py
+│   │   └── linear/
+│   │       ├── parameter_rules.py
+│   │       ├── calculation_rules.py
+│   │       └── output_rules.py
+│   └── speech/
 │       ├── compatibility/
-│       │   └── linear.py
-│       └── linear/
+│       │   ├── audio_input.py
+│       │   └── framing_windowing.py
+│       ├── audio_input/
+│       │   ├── parameter_rules.py
+│       │   ├── calculation_rules.py
+│       │   └── output_rules.py
+│       └── framing_windowing/
 │           ├── parameter_rules.py
 │           ├── calculation_rules.py
 │           └── output_rules.py
 ├── utils/
-│   └── print_helpers.py
+│   ├── print_helpers.py
+│   └── printing/
+│       ├── common.py
+│       ├── transformers.py
+│       ├── activations.py
+│       ├── projections.py
+│       └── speech.py
 ├── engine.py
 └── prompts.py
 ```
@@ -201,3 +223,73 @@ Outputs are written to:
 outputs/calculation_trace.txt
 outputs/session_summary.txt
 ```
+
+
+## Speech Module: Audio Input Layer
+
+The first speech layer represents raw audio/WAV information as a numeric waveform tensor while preserving the channel dimension:
+
+```text
+(batch_size, samples_per_channel, channels)
+```
+
+The system asks for:
+
+```text
+batch_size
+duration_seconds
+sample_rate
+channels
+bit_depth
+```
+
+Shape calculation:
+
+```text
+samples_per_channel = duration_seconds × sample_rate
+output_shape = (batch_size, samples_per_channel, channels)
+```
+
+This means mono, stereo, and multi-channel audio are all accepted without forcing the user to downmix to mono.
+
+## Speech Module: Audio Framing + Windowing Layer
+
+The second speech layer splits the raw waveform into short overlapping frames and applies a window function:
+
+```text
+Input:  (batch_size, samples_per_channel, channels)
+Output: (batch_size, num_frames, frame_length_samples, channels)
+```
+
+The system asks for:
+
+```text
+frame_length_ms
+hop_length_ms
+window_function = Hann / Hamming / Rectangular
+```
+
+Shape calculation:
+
+```text
+frame_length_samples = sample_rate × frame_length_ms / 1000
+hop_length_samples = sample_rate × hop_length_ms / 1000
+num_frames = 1 + floor((samples_per_channel - frame_length_samples) / hop_length_samples)
+output_shape = (batch_size, num_frames, frame_length_samples, channels)
+```
+
+Example:
+
+```text
+Audio Input output = (1, 32000, 2)
+sample_rate = 16000
+frame_length_ms = 25
+hop_length_ms = 10
+
+frame_length_samples = 400
+hop_length_samples = 160
+num_frames = 198
+Framing + Windowing output = (1, 198, 400, 2)
+```
+
+The channel dimension is preserved, so the layer supports mono, stereo, and multi-channel audio.

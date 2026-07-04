@@ -279,3 +279,120 @@ The layer should still support:
 hidden projection → float_hidden_tensor
 output score projection before Softmax → logits
 ```
+
+
+## Test Case: Audio Input first layer
+
+Expected: valid.
+
+```text
+Audio Input Layer
+batch_size = 1
+duration_seconds = 2
+sample_rate = 16000
+channels = 2
+bit_depth = 16
+```
+
+Expected output shape:
+
+```text
+(1, 32000, 2)
+```
+
+Expected behavior:
+
+```text
+The channel dimension is preserved. The system does not force mono audio.
+```
+
+## Test Case: Audio Input after another layer
+
+Expected: rollback.
+
+```text
+Input Encoding → Audio Input
+```
+
+Reason:
+
+```text
+Audio Input must be the first layer because it works on raw audio/WAV metadata.
+```
+
+## Test Case: Refactored printing structure
+
+Expected: existing output rules still work through the compatibility facade.
+
+```text
+src/utils/print_helpers.py
+```
+
+should re-export helpers from:
+
+```text
+src/utils/printing/common.py
+src/utils/printing/transformers.py
+src/utils/printing/activations.py
+src/utils/printing/projections.py
+src/utils/printing/speech.py
+```
+
+## Test Case: Audio Input → Framing + Windowing
+
+Expected: valid.
+
+```text
+Audio Input Layer
+→ Audio Framing + Windowing Layer
+```
+
+Audio Input values:
+
+```text
+batch_size = 1
+duration_seconds = 2
+sample_rate = 16000
+channels = 2
+bit_depth = 16
+```
+
+Framing + Windowing values:
+
+```text
+frame_length_ms = 25
+hop_length_ms = 10
+window_function = Hann
+```
+
+Expected output shape:
+
+```text
+(1, 198, 400, 2)
+```
+
+Expected data type:
+
+```text
+float_framed_audio_tensor
+```
+
+## Test Case: Framing + Windowing first
+
+Expected: rollback.
+
+Reason:
+
+```text
+Framing + Windowing needs a previous raw audio waveform tensor from Audio Input.
+```
+
+## Test Case: Input Encoding → Framing + Windowing
+
+Expected: rollback.
+
+Reason:
+
+```text
+Framing + Windowing requires float_audio_waveform_tensor, not float_hidden_tensor.
+```

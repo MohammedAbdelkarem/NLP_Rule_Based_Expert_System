@@ -172,6 +172,168 @@ class MenuRules:
             source_name="activations"
         ))
 
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="10"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_audio_input(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="audio_input",
+            layer_title="Audio Input Layer (Speech Module)",
+            source_name="speech"
+        ))
+
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="11"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_framing_windowing(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="framing_windowing",
+            layer_title="Audio Framing + Windowing Layer (Speech Module)",
+            source_name="speech"
+        ))
+
+
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="12"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_stft_spectrum(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="stft_spectrum",
+            layer_title="STFT / Spectrum Extraction Component Group (Speech Module)",
+            source_name="speech"
+        ))
+
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="13"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_mel_filterbank(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="mel_filterbank",
+            layer_title="Mel Filterbank Component Group (Speech Module)",
+            source_name="speech"
+        ))
+
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="14"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_log_mel_spectrogram(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="log_mel_spectrogram",
+            layer_title="Log-Mel Spectrogram Layer (Speech Module)",
+            source_name="speech"
+        ))
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="15"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_mfcc(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="mfcc",
+            layer_title="MFCC Component Group (Speech Module)",
+            source_name="speech"
+        ))
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="16"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_delta_features(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="delta_features",
+            layer_title="Delta + Delta-Delta Feature Augmentation Component Group (Speech Module)",
+            source_name="speech"
+        ))
+
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="17"
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_feature_normalization(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="feature_normalization",
+            layer_title="Speech Feature Normalization Layer (Speech Module)",
+            source_name="speech"
+        ))
+
+
+
+
+
     @Rule(
         MenuChoice(
             layer_index=MATCH.layer_index,
@@ -202,6 +364,14 @@ class MenuRules:
         TEST(lambda choice: choice != "7"),
         TEST(lambda choice: choice != "8"),
         TEST(lambda choice: choice != "9"),
+        TEST(lambda choice: choice != "10"),
+        TEST(lambda choice: choice != "11"),
+        TEST(lambda choice: choice != "12"),
+        TEST(lambda choice: choice != "13"),
+        TEST(lambda choice: choice != "14"),
+        TEST(lambda choice: choice != "15"),
+        TEST(lambda choice: choice != "16"),
+        TEST(lambda choice: choice != "17"),
         TEST(lambda choice: choice != "0"),
         NOT(SelectedLayer(layer_index=MATCH.layer_index)),
         salience=89
@@ -214,7 +384,7 @@ class MenuRules:
         choice
     ):
         print()
-        print("Invalid layer choice. Please choose 1, 2, 3, 4, 5, 6, 7, 8, 9, or 0.")
+        print("Invalid layer choice. Please choose 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, or 0.")
         print(MAIN_MENU)
 
         self.retract(menu_choice_fact)
