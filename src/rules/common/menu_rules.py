@@ -334,6 +334,116 @@ class MenuRules:
 
 
 
+
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="18",
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_sigmoid(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="sigmoid",
+            layer_title="Sigmoid Activation Layer",
+            source_name="activations"
+        ))
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="19",
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_binary_logistic_regression_head(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="binary_logistic_regression_head",
+            layer_title="Binary Logistic Regression Head (Chapter 4)",
+            source_name="classification_heads"
+        ))
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="20",
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_multinomial_logistic_regression_head(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="multinomial_logistic_regression_head",
+            layer_title="Multinomial Logistic Regression Head (Chapter 4)",
+            source_name="classification_heads"
+        ))
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="21",
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_binary_cross_entropy(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="binary_cross_entropy",
+            layer_title="Binary Cross-Entropy Loss (Training Component)",
+            source_name="losses"
+        ))
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="22",
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_categorical_cross_entropy(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="categorical_cross_entropy",
+            layer_title="Categorical Cross-Entropy Loss (Training Component)",
+            source_name="losses"
+        ))
+
+    @Rule(
+        MenuChoice(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            choice="23",
+        ),
+        NOT(SelectedLayer(layer_index=MATCH.layer_index)),
+        salience=90
+    )
+    def select_l1_l2_regularization(self, layer_index, previous_layer_index):
+        self.declare(SelectedLayer(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_name="l1_l2_regularization",
+            layer_title="L1/L2 Regularization Constraint (Training Component)",
+            source_name="regularization"
+        ))
+
     @Rule(
         MenuChoice(
             layer_index=MATCH.layer_index,
@@ -372,6 +482,12 @@ class MenuRules:
         TEST(lambda choice: choice != "15"),
         TEST(lambda choice: choice != "16"),
         TEST(lambda choice: choice != "17"),
+        TEST(lambda choice: choice != "18"),
+        TEST(lambda choice: choice != "19"),
+        TEST(lambda choice: choice != "20"),
+        TEST(lambda choice: choice != "21"),
+        TEST(lambda choice: choice != "22"),
+        TEST(lambda choice: choice != "23"),
         TEST(lambda choice: choice != "0"),
         NOT(SelectedLayer(layer_index=MATCH.layer_index)),
         salience=89
@@ -384,7 +500,7 @@ class MenuRules:
         choice
     ):
         print()
-        print("Invalid layer choice. Please choose 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, or 0.")
+        print("Invalid layer choice. Please choose a listed option number or 0.")
         print(MAIN_MENU)
 
         self.retract(menu_choice_fact)

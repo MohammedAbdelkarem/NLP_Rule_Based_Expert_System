@@ -122,15 +122,13 @@ class MFCCCalculationRules:
         parameter_shape = "None (MFCC has no learnable weights)"
         dct_matrix_shape = f"({num_mel_filters_int}, {num_mfcc_coefficients_int})"
 
-        if include_c0 == "include_c0":
-            coefficient_range = f"c0..c{num_mfcc_coefficients_int - 1}"
-        else:
-            coefficient_range = f"c1..c{num_mfcc_coefficients_int}"
-
-        if lifter_int == 0:
-            lifter_status = "disabled"
-        else:
-            lifter_status = f"enabled_lifter_{lifter_int}"
+        coefficient_range_by_policy = {
+            "include_c0": f"c0..c{num_mfcc_coefficients_int - 1}",
+            "exclude_c0": f"c1..c{num_mfcc_coefficients_int}",
+        }
+        coefficient_range = coefficient_range_by_policy[include_c0]
+        lifter_status_options = ["disabled", f"enabled_lifter_{lifter_int}"]
+        lifter_status = lifter_status_options[int(lifter_int != 0)]
 
         self.declare(WeightShape(
             layer_index=layer_index,

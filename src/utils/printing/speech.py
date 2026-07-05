@@ -294,12 +294,12 @@ def print_log_mel_spectrogram_result(
     print(f"Mel filters preserved: {num_mel_filters}")
     print(f"Channels preserved: {channels}")
 
-    if compression_mode == "decibel":
-        formula = "10 * log10(mel_energy + epsilon)"
-    elif compression_mode == "log10":
-        formula = "log10(mel_energy + epsilon)"
-    else:
-        formula = "log(mel_energy + epsilon)"
+    formula_by_mode = {
+        "decibel": "10 * log10(mel_energy + epsilon)",
+        "log10": "log10(mel_energy + epsilon)",
+        "natural_log": "log(mel_energy + epsilon)",
+    }
+    formula = formula_by_mode[compression_mode]
 
     print_shape_block("Input Mel spectrum tensor shape", input_shape, "mel frequency spectrum tensor")
     print_weight_block(parameter_shape)
@@ -512,12 +512,16 @@ def print_feature_normalization_result(
     print(f"Channels preserved: {channels}")
     print(f"Statistics shape per stream: {statistics_shape}")
 
-    if normalization_mode_name == "range_scaling_minus_one_to_one":
-        operation = "x_norm = 2 * (x - min) / (max - min + epsilon) - 1"
-        statistics = "min/max statistics"
-    else:
-        operation = "x_norm = (x - mean) / (std + epsilon)"
-        statistics = "mean/std statistics"
+    operation_by_mode = {
+        "range_scaling_minus_one_to_one": "x_norm = 2 * (x - min) / (max - min + epsilon) - 1",
+        "cmvn_standardization": "x_norm = (x - mean) / (std + epsilon)",
+    }
+    statistics_by_mode = {
+        "range_scaling_minus_one_to_one": "min/max statistics",
+        "cmvn_standardization": "mean/std statistics",
+    }
+    operation = operation_by_mode[normalization_mode_name]
+    statistics = statistics_by_mode[normalization_mode_name]
 
     print_shape_block("Input separated Delta feature stream group", input_shape, "separate delta feature stream group")
     print_weight_block(parameter_shape)

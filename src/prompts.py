@@ -17,11 +17,20 @@ Available layers:
 15. MFCC Component Group (Speech Module)
 16. Delta + Delta-Delta Feature Augmentation Component Group (Speech Module)
 17. Speech Feature Normalization Layer (Speech Module)
+18. Sigmoid Activation Layer
+19. Binary Logistic Regression Head (Chapter 4)
+20. Multinomial Logistic Regression Head (Chapter 4)
+21. Binary Cross-Entropy Loss (Training Component)
+22. Categorical Cross-Entropy Loss (Training Component)
+23. L1/L2 Regularization Constraint (Training Component)
 """
 
 CHOOSE_FIRST_LAYER = "\nChoose the first layer number: "
 CHOOSE_NEXT_LAYER = "\nChoose the next layer number: "
-ASK_ROLLBACK_LAYER = "\nChoose another layer number for the same layer position, or 0 to end the session: "
+ASK_ROLLBACK_LAYER = (
+    '\\nChoose another layer number for the same layer position, or 0 to end the '
+    'session: '
+)
 
 INPUT_ENCODING_SELECTED = """
 You selected: Input Encoding Layer Group
@@ -45,7 +54,9 @@ ASK_SEQUENCE_LENGTH = "Enter sequence length / context length: "
 ASK_VOCAB_SIZE = "Enter vocabulary size / number of tokens: "
 ASK_MODEL_DIM = "Enter model dimension d_model / embedding vector size: "
 ASK_NUM_HEADS = "Enter number of attention heads: "
-ASK_RESIDUAL_SOURCE_LAYER_INDEX = "Enter residual source layer index to add with the previous layer output: "
+ASK_RESIDUAL_SOURCE_LAYER_INDEX = (
+    'Enter residual source layer index to add with the previous layer output: '
+)
 ASK_FEED_FORWARD_DIM = "Enter feed-forward hidden dimension d_ff: "
 ASK_INPUT_DIM = "Enter input feature dimension: "
 ASK_POSITION_WISE_LINEAR_OUTPUT_DIM = "Enter output feature dimension: "
@@ -302,3 +313,107 @@ Choose feature normalization mode:
 2. Range scaling: scale features to [-1, 1]
 
 Your choice: """
+
+
+SIGMOID_SELECTED = """
+You selected: Sigmoid Activation Layer
+
+Sigmoid converts one binary logit into a probability between 0 and 1.
+It is not trainable by itself, but it is the output activation used by binary logistic regression.
+"""
+
+ASK_SIGMOID_INPUT_KIND = """
+Choose your input data kind:
+1. Binary logits with last dimension = 1
+2. Raw token IDs / hidden tensor / probabilities
+
+Your choice: """
+
+ASK_SIGMOID_INPUT_RANK = """
+Choose Sigmoid input shape rank:
+1. Rank-2 binary logits: (batch_size, 1)
+2. Rank-3 binary logits: (batch_size, sequence_length, 1)
+
+Your choice: """
+
+BINARY_LOGISTIC_REGRESSION_HEAD_SELECTED = """
+You selected: Binary Logistic Regression Head
+
+This Chapter 4 component group combines:
+1. Linear logits projection: z = xW + b
+2. Sigmoid activation: p = sigmoid(z)
+
+It is a trainable binary classification head.
+"""
+
+ASK_BINARY_CLASSIFIER_INPUT_RANK = """
+Choose the binary classifier input shape:
+1. Feature vector: (batch_size, input_dim)
+2. Sequence features: (batch_size, sequence_length, input_dim)
+
+Your choice: """
+
+MULTINOMIAL_LOGISTIC_REGRESSION_HEAD_SELECTED = """
+You selected: Multinomial Logistic Regression / Softmax Classification Head
+
+This Chapter 4 component group combines:
+1. Linear logits projection: z = xW + b
+2. Softmax activation over classes
+
+It is a trainable multi-class classification head.
+"""
+
+ASK_MULTICLASS_CLASSIFIER_INPUT_RANK = """
+Choose the multi-class classifier input shape:
+1. Feature vector: (batch_size, input_dim)
+2. Sequence features: (batch_size, sequence_length, input_dim)
+
+Your choice: """
+
+ASK_MULTICLASS_CLASS_COUNT = "Enter number of classes: "
+
+BINARY_CROSS_ENTROPY_SELECTED = """
+You selected: Binary Cross-Entropy Loss
+
+This is a training component, not an inference layer.
+It must follow binary probabilities from Sigmoid or a Binary Logistic Regression Head.
+"""
+
+CATEGORICAL_CROSS_ENTROPY_SELECTED = """
+You selected: Categorical Cross-Entropy Loss
+
+This is a training component, not an inference layer.
+It must follow class probabilities from Softmax or a Multinomial Logistic Regression Head.
+"""
+
+ASK_LOSS_REDUCTION = """
+Choose loss reduction:
+1. Mean over batch/items
+2. Sum over batch/items
+
+Your choice: """
+
+ASK_CCE_LABEL_FORMAT = """
+Choose label format:
+1. One-hot labels: same shape as probabilities
+2. Class-index labels: integer class id per item
+
+Your choice: """
+
+REGULARIZATION_SELECTED = """
+You selected: L1/L2 Regularization Constraint
+
+This is a training constraint, not a forward neural layer.
+It adds a penalty to the training loss and preserves the forward prediction shape.
+"""
+
+ASK_REGULARIZATION_TYPE = """
+Choose regularization type:
+1. L1 regularization: λ × ||W||₁
+2. L2 regularization: λ × ||W||²
+
+Your choice: """
+
+ASK_REGULARIZATION_LAMBDA_EXPONENT = (
+    'Enter lambda exponent p for lambda = 10^-p, for example 4 means 1e-4: '
+)

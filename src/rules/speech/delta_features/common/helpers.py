@@ -20,8 +20,157 @@ def build_delta_shapes(batch_size, num_frames, num_mfcc_coefficients, channels):
 
 def delta_denominator(delta_window):
     window_int = int(delta_window)
-    squared_sum = sum(n * n for n in range(1, window_int + 1))
+    squared_sum = window_int * (window_int + 1) * ((2 * window_int) + 1) // 6
     return 2 * squared_sum
+
+
+def declare_delta_stream_tensors(engine, layer_index, stream_shape, delta_window):
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="mfcc_static_stream",
+        role="stream_output",
+        dims_count=4,
+        shape=stream_shape,
+        data_type="mfcc_static_stream_tensor",
+        source="copied_static_mfcc_features"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="delta_stream",
+        role="stream_output",
+        dims_count=4,
+        shape=stream_shape,
+        data_type="mfcc_delta_stream_tensor",
+        source=f"fixed_temporal_regression_delta_window_{delta_window}"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="delta_delta_stream",
+        role="stream_output",
+        dims_count=4,
+        shape=stream_shape,
+        data_type="mfcc_delta_delta_stream_tensor",
+        source=f"fixed_temporal_regression_over_delta_window_{delta_window}"
+    ))
+
+
+def declare_delta_kernel_tensors(engine, layer_index, delta_window, denominator):
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="fixed_delta_temporal_kernel",
+        role="intermediate",
+        dims_count=1,
+        shape=f"window_radius={delta_window}, denominator={denominator}",
+        data_type="fixed_temporal_difference_kernel_not_trainable",
+        source="deterministic_delta_regression_formula"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="fixed_delta_delta_temporal_kernel",
+        role="intermediate",
+        dims_count=1,
+        shape=f"window_radius={delta_window}, denominator={denominator}",
+        data_type="fixed_second_order_temporal_difference_kernel_not_trainable",
+        source="same_delta_formula_applied_to_delta_stream"
+    ))
+
+
+def declare_delta_metadata(
+    engine,
+    layer_index,
+    sample_rate,
+    batch_size,
+    num_frames,
+    num_mfcc_coefficients,
+    concatenated_coefficients,
+    channels,
+    delta_window,
+):
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="sample_rate",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(sample_rate),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="output_batch_size",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(batch_size),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="output_num_frames",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(num_frames),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="input_mfcc_coefficients",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(num_mfcc_coefficients),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="concatenated_feature_coefficients",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(concatenated_coefficients),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="output_channels",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(channels),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="delta_window",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(delta_window),
+        data_type="integer_dimension_value",
+        source="delta_feature_shape_metadata"
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        tensor_name="delta_adapter_available",
+        role="shape_metadata",
+        dims_count=1,
+        shape="true",
+        data_type="configuration_value",
+        source="delta_feature_shape_metadata"
+    ))
 
 
 def declare_delta_tensors(
@@ -57,40 +206,8 @@ def declare_delta_tensors(
         data_type=previous_data_type,
         source=f"layer_{previous_layer_index}_mfcc_features"
     ))
-
-    stream_specs = [
-        ("mfcc_static_stream", "mfcc_static_stream_tensor", "copied_static_mfcc_features"),
-        ("delta_stream", "mfcc_delta_stream_tensor", f"fixed_temporal_regression_delta_window_{delta_window}"),
-        ("delta_delta_stream", "mfcc_delta_delta_stream_tensor", f"fixed_temporal_regression_over_delta_window_{delta_window}"),
-    ]
-    for tensor_name, data_type, source in stream_specs:
-        engine.declare(TensorInfo(
-            layer_index=layer_index,
-            layer_name="delta_features",
-            tensor_name=tensor_name,
-            role="stream_output",
-            dims_count=4,
-            shape=stream_shape,
-            data_type=data_type,
-            source=source
-        ))
-
-    kernel_specs = [
-        ("fixed_delta_temporal_kernel", f"window_radius={delta_window}, denominator={denominator}", "fixed_temporal_difference_kernel_not_trainable", "deterministic_delta_regression_formula"),
-        ("fixed_delta_delta_temporal_kernel", f"window_radius={delta_window}, denominator={denominator}", "fixed_second_order_temporal_difference_kernel_not_trainable", "same_delta_formula_applied_to_delta_stream"),
-    ]
-    for tensor_name, shape, data_type, source in kernel_specs:
-        engine.declare(TensorInfo(
-            layer_index=layer_index,
-            layer_name="delta_features",
-            tensor_name=tensor_name,
-            role="intermediate",
-            dims_count=1,
-            shape=shape,
-            data_type=data_type,
-            source=source
-        ))
-
+    declare_delta_stream_tensors(engine, layer_index, stream_shape, delta_window)
+    declare_delta_kernel_tensors(engine, layer_index, delta_window, denominator)
     engine.declare(TensorInfo(
         layer_index=layer_index,
         layer_name="delta_features",
@@ -101,28 +218,17 @@ def declare_delta_tensors(
         data_type="mfcc_delta_delta_concatenated_tensor",
         source="concatenate_mfcc_delta_delta_streams_on_feature_axis"
     ))
-
-    metadata = [
-        ("sample_rate", sample_rate),
-        ("output_batch_size", batch_size),
-        ("output_num_frames", num_frames),
-        ("input_mfcc_coefficients", num_mfcc_coefficients),
-        ("concatenated_feature_coefficients", concatenated_coefficients),
-        ("output_channels", channels),
-        ("delta_window", delta_window),
-        ("delta_adapter_available", "true"),
-    ]
-    for tensor_name, shape in metadata:
-        engine.declare(TensorInfo(
-            layer_index=layer_index,
-            layer_name="delta_features",
-            tensor_name=tensor_name,
-            role="shape_metadata",
-            dims_count=1,
-            shape=str(shape),
-            data_type="integer_dimension_value" if str(shape).isdigit() else "configuration_value",
-            source="delta_feature_shape_metadata"
-        ))
+    declare_delta_metadata(
+        engine=engine,
+        layer_index=layer_index,
+        sample_rate=sample_rate,
+        batch_size=batch_size,
+        num_frames=num_frames,
+        num_mfcc_coefficients=num_mfcc_coefficients,
+        concatenated_coefficients=concatenated_coefficients,
+        channels=channels,
+        delta_window=delta_window,
+    )
 
 
 def declare_delta_steps(
@@ -136,25 +242,64 @@ def declare_delta_steps(
     concatenated_shape,
     separate_group_shape,
 ):
-    steps = [
-        ("delta_denominator", "Fixed delta-regression denominator", "2 * sum(n^2 for n = 1..N)", f"N={delta_window}, denominator={denominator}", str(denominator)),
-        ("delta_stream_shapes", "Static, delta, and delta-delta stream shapes", "each stream keeps (batch_size, num_frames, num_mfcc_coefficients, channels)", stream_shape, f"mfcc_static={stream_shape}, delta={stream_shape}, delta_delta={stream_shape}"),
-        ("delta_adapter_shape", "Available concatenation adapter shape", "num_mfcc_coefficients * 3", f"{num_mfcc_coefficients} * 3 = {concatenated_coefficients}", concatenated_shape),
-        ("delta_primary_output_shape", "Primary output remains separated", "output = separate MFCC, Delta, Delta-Delta streams", "output_design=separate_streams_always", separate_group_shape),
-        ("delta_parameter_status", "Trainable parameter status", "delta features use fixed temporal difference kernels", f"delta_window={delta_window}", "trainable=False, has_weights=False, has_bias=False, has_kernel=True, kernel_trainable=False"),
-    ]
-    previous_key = "none"
-    for order, (key, title, formula, substitution, result) in enumerate(steps, start=1):
-        step_key = f"layer_{layer_index}_{key}"
-        engine.declare(CalculationStep(
-            layer_index=layer_index,
-            layer_name="delta_features",
-            step_key=step_key,
-            previous_step_key=previous_key,
-            step_order=order,
-            title=title,
-            formula=formula,
-            substitution=substitution,
-            result=result
-        ))
-        previous_key = step_key
+    step_1_key = f"layer_{layer_index}_delta_denominator"
+    step_2_key = f"layer_{layer_index}_delta_stream_shapes"
+    step_3_key = f"layer_{layer_index}_delta_adapter_shape"
+    step_4_key = f"layer_{layer_index}_delta_primary_output_shape"
+    step_5_key = f"layer_{layer_index}_delta_parameter_status"
+
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        step_key=step_1_key,
+        previous_step_key="none",
+        step_order=1,
+        title="Fixed delta-regression denominator",
+        formula="2 * N * (N + 1) * (2N + 1) / 6",
+        substitution=f"N={delta_window}, denominator={denominator}",
+        result=str(denominator)
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        step_key=step_2_key,
+        previous_step_key=step_1_key,
+        step_order=2,
+        title="Static, delta, and delta-delta stream shapes",
+        formula="each stream keeps (batch_size, num_frames, num_mfcc_coefficients, channels)",
+        substitution=stream_shape,
+        result=f"mfcc_static={stream_shape}, delta={stream_shape}, delta_delta={stream_shape}"
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        step_key=step_3_key,
+        previous_step_key=step_2_key,
+        step_order=3,
+        title="Available concatenation adapter shape",
+        formula="num_mfcc_coefficients * 3",
+        substitution=f"{num_mfcc_coefficients} * 3 = {concatenated_coefficients}",
+        result=concatenated_shape
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        step_key=step_4_key,
+        previous_step_key=step_3_key,
+        step_order=4,
+        title="Primary output remains separated",
+        formula="output = separate MFCC, Delta, Delta-Delta streams",
+        substitution="output_design=separate_streams_always",
+        result=separate_group_shape
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="delta_features",
+        step_key=step_5_key,
+        previous_step_key=step_4_key,
+        step_order=5,
+        title="Trainable parameter status",
+        formula="delta features use fixed temporal difference kernels",
+        substitution=f"delta_window={delta_window}",
+        result="trainable=False, has_weights=False, has_bias=False, has_kernel=True, kernel_trainable=False"
+    ))

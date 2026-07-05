@@ -2,12 +2,9 @@ import collections
 import collections.abc
 
 # Compatibility patch for Experta/frozendict on newer Python versions.
-if not hasattr(collections, "Mapping"):
-    collections.Mapping = collections.abc.Mapping
-if not hasattr(collections, "MutableMapping"):
-    collections.MutableMapping = collections.abc.MutableMapping
-if not hasattr(collections, "Sequence"):
-    collections.Sequence = collections.abc.Sequence
+collections.Mapping = collections.abc.Mapping
+collections.MutableMapping = collections.abc.MutableMapping
+collections.Sequence = collections.abc.Sequence
 
 from experta import KnowledgeEngine
 
@@ -74,12 +71,16 @@ from src.rules.activations import (
     GELUOutputRules,
     SoftmaxParameterRules,
     SoftmaxCalculationRules,
-    SoftmaxOutputRules
+    SoftmaxOutputRules,
+    SigmoidParameterRules,
+    SigmoidCalculationRules,
+    SigmoidOutputRules
 )
 
 from src.rules.activations.compatibility import (
     ActivationCompatibilityRules,
-    SoftmaxActivationCompatibilityRules
+    SoftmaxActivationCompatibilityRules,
+    SigmoidActivationCompatibilityRules
 )
 
 from src.rules.projections.compatibility import LinearProjectionCompatibilityRules
@@ -89,6 +90,36 @@ from src.rules.projections import (
     PositionWiseLinearCalculationRules,
     PositionWiseLinearOutputRules
 )
+
+from src.rules.classification_heads import (
+    BinaryLogisticRegressionHeadParameterRules,
+    BinaryLogisticRegressionHeadCalculationRules,
+    BinaryLogisticRegressionHeadOutputRules,
+    MultinomialLogisticRegressionHeadParameterRules,
+    MultinomialLogisticRegressionHeadCalculationRules,
+    MultinomialLogisticRegressionHeadOutputRules
+)
+
+from src.rules.classification_heads.compatibility import ClassificationHeadCompatibilityRules
+
+from src.rules.losses import (
+    BinaryCrossEntropyParameterRules,
+    BinaryCrossEntropyCalculationRules,
+    BinaryCrossEntropyOutputRules,
+    CategoricalCrossEntropyParameterRules,
+    CategoricalCrossEntropyCalculationRules,
+    CategoricalCrossEntropyOutputRules
+)
+
+from src.rules.losses.compatibility import LossCompatibilityRules
+
+from src.rules.regularization import (
+    L1L2RegularizationParameterRules,
+    L1L2RegularizationCalculationRules,
+    L1L2RegularizationOutputRules
+)
+
+from src.rules.regularization.compatibility import RegularizationCompatibilityRules
 
 from src.rules.speech import (
     AudioInputCompatibilityRules,
@@ -141,6 +172,10 @@ class NeuralNetworkExpertSystem(
     ActivationCompatibilityRules,
     LinearProjectionCompatibilityRules,
     SoftmaxActivationCompatibilityRules,
+    SigmoidActivationCompatibilityRules,
+    ClassificationHeadCompatibilityRules,
+    LossCompatibilityRules,
+    RegularizationCompatibilityRules,
     AudioInputCompatibilityRules,
     FramingWindowingCompatibilityRules,
     STFTSpectrumCompatibilityRules,
@@ -174,6 +209,21 @@ class NeuralNetworkExpertSystem(
     FeatureNormalizationParameterRules,
     FeatureNormalizationCalculationRules,
     FeatureNormalizationOutputRules,
+    BinaryLogisticRegressionHeadParameterRules,
+    BinaryLogisticRegressionHeadCalculationRules,
+    BinaryLogisticRegressionHeadOutputRules,
+    MultinomialLogisticRegressionHeadParameterRules,
+    MultinomialLogisticRegressionHeadCalculationRules,
+    MultinomialLogisticRegressionHeadOutputRules,
+    BinaryCrossEntropyParameterRules,
+    BinaryCrossEntropyCalculationRules,
+    BinaryCrossEntropyOutputRules,
+    CategoricalCrossEntropyParameterRules,
+    CategoricalCrossEntropyCalculationRules,
+    CategoricalCrossEntropyOutputRules,
+    L1L2RegularizationParameterRules,
+    L1L2RegularizationCalculationRules,
+    L1L2RegularizationOutputRules,
     InputEncodingParameterRules,
     InputEncodingTokenEmbeddingRules,
     InputEncodingPositionalEmbeddingRules,
@@ -210,6 +260,9 @@ class NeuralNetworkExpertSystem(
     SoftmaxParameterRules,
     SoftmaxCalculationRules,
     SoftmaxOutputRules,
+    SigmoidParameterRules,
+    SigmoidCalculationRules,
+    SigmoidOutputRules,
     KnowledgeEngine
 ):
     engine_name = "neural_network_expert_system"

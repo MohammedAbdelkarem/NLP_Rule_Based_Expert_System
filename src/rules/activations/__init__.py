@@ -8,6 +8,11 @@ from src.rules.activations.gelu import (
     GELUCalculationRules,
     GELUOutputRules
 )
+from src.rules.activations.sigmoid import (
+    SigmoidParameterRules,
+    SigmoidCalculationRules,
+    SigmoidOutputRules
+)
 from src.rules.activations.softmax import (
     SoftmaxParameterRules,
     SoftmaxCalculationRules,

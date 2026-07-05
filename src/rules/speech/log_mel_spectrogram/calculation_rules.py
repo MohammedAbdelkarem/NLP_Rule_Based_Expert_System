@@ -104,15 +104,18 @@ class LogMelSpectrogramCalculationRules:
         output_shape = f"({batch_size_int}, {num_frames_int}, {num_mel_filters_int}, {channels_int})"
         parameter_shape = "None (Log-Mel Spectrogram has no learnable weights)"
 
-        if compression_mode == "decibel":
-            formula = "10 * log10(mel_energy + epsilon)"
-            output_data_type = "log_mel_decibel_spectrogram_tensor"
-        elif compression_mode == "log10":
-            formula = "log10(mel_energy + epsilon)"
-            output_data_type = "log10_mel_spectrogram_tensor"
-        else:
-            formula = "log(mel_energy + epsilon)"
-            output_data_type = "log_mel_spectrogram_tensor"
+        formula_by_mode = {
+            "decibel": "10 * log10(mel_energy + epsilon)",
+            "log10": "log10(mel_energy + epsilon)",
+            "natural_log": "log(mel_energy + epsilon)",
+        }
+        output_type_by_mode = {
+            "decibel": "log_mel_decibel_spectrogram_tensor",
+            "log10": "log10_mel_spectrogram_tensor",
+            "natural_log": "log_mel_spectrogram_tensor",
+        }
+        formula = formula_by_mode[compression_mode]
+        output_data_type = output_type_by_mode[compression_mode]
 
         self.declare(WeightShape(
             layer_index=layer_index,

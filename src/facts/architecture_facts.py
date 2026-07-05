@@ -43,3 +43,14 @@ class TransformationSuggestion(Fact):
     from_shape = Field(str, mandatory=True)
     to_shape = Field(str, mandatory=True)
     method = Field(str, mandatory=True)
+
+
+class TrainingComponent(Fact):
+    component_index = Field(int, mandatory=True)
+    component_name = Field(str, mandatory=True)
+    component_title = Field(str, mandatory=True)
+    component_type = Field(str, mandatory=True)
+    input_shape = Field(str, mandatory=True)
+    output_shape = Field(str, mandatory=True)
+    status = Field(str, mandatory=True)
+    used_during = Field(str, mandatory=True)

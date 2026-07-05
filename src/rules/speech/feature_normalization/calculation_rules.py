@@ -11,7 +11,8 @@ from src.rules.speech.feature_normalization.common.helpers import (
     build_normalized_stream_shapes,
     declare_normalization_steps,
     declare_normalization_tensors,
-    resolve_normalization_mode,
+    normalization_mode_cmvn,
+    normalization_mode_range_scaling,
 )
 
 
@@ -31,20 +32,134 @@ class FeatureNormalizationCalculationRules:
             shape=MATCH.previous_output_shape,
             data_type="separate_delta_feature_stream_group"
         ),
-        TensorInfo(layer_index=MATCH.previous_layer_index, tensor_name="output_batch_size", role="shape_metadata", shape=MATCH.batch_size),
-        TensorInfo(layer_index=MATCH.previous_layer_index, tensor_name="output_num_frames", role="shape_metadata", shape=MATCH.num_frames),
-        TensorInfo(layer_index=MATCH.previous_layer_index, tensor_name="input_mfcc_coefficients", role="shape_metadata", shape=MATCH.num_features),
-        TensorInfo(layer_index=MATCH.previous_layer_index, tensor_name="output_channels", role="shape_metadata", shape=MATCH.channels),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="output_batch_size",
+            role="shape_metadata",
+            shape=MATCH.batch_size
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="output_num_frames",
+            role="shape_metadata",
+            shape=MATCH.num_frames
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="input_mfcc_coefficients",
+            role="shape_metadata",
+            shape=MATCH.num_features
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="output_channels",
+            role="shape_metadata",
+            shape=MATCH.channels
+        ),
         LayerParameter(
             layer_index=MATCH.layer_index,
             layer_name="feature_normalization",
             parameter_name="normalization_mode",
-            value=MATCH.normalization_mode
+            value="1"
         ),
         NOT(Layer(layer_index=MATCH.layer_index)),
         salience=60
     )
-    def calculate_feature_normalization(
+    def calculate_cmvn_feature_normalization(
+        self,
+        layer_index,
+        previous_layer_index,
+        layer_title,
+        previous_output_shape,
+        batch_size,
+        num_frames,
+        num_features,
+        channels
+    ):
+        self._declare_feature_normalization(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_title=layer_title,
+            previous_output_shape=previous_output_shape,
+            batch_size=batch_size,
+            num_frames=num_frames,
+            num_features=num_features,
+            channels=channels,
+            mode_info=normalization_mode_cmvn(),
+        )
+
+    @Rule(
+        SelectedLayer(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=MATCH.previous_layer_index,
+            layer_name="feature_normalization",
+            layer_title=MATCH.layer_title
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="delta_feature_stream_group",
+            role="output",
+            dims_count=4,
+            shape=MATCH.previous_output_shape,
+            data_type="separate_delta_feature_stream_group"
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="output_batch_size",
+            role="shape_metadata",
+            shape=MATCH.batch_size
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="output_num_frames",
+            role="shape_metadata",
+            shape=MATCH.num_frames
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="input_mfcc_coefficients",
+            role="shape_metadata",
+            shape=MATCH.num_features
+        ),
+        TensorInfo(
+            layer_index=MATCH.previous_layer_index,
+            tensor_name="output_channels",
+            role="shape_metadata",
+            shape=MATCH.channels
+        ),
+        LayerParameter(
+            layer_index=MATCH.layer_index,
+            layer_name="feature_normalization",
+            parameter_name="normalization_mode",
+            value="2"
+        ),
+        NOT(Layer(layer_index=MATCH.layer_index)),
+        salience=60
+    )
+    def calculate_range_feature_normalization(
+        self,
+        layer_index,
+        previous_layer_index,
+        layer_title,
+        previous_output_shape,
+        batch_size,
+        num_frames,
+        num_features,
+        channels
+    ):
+        self._declare_feature_normalization(
+            layer_index=layer_index,
+            previous_layer_index=previous_layer_index,
+            layer_title=layer_title,
+            previous_output_shape=previous_output_shape,
+            batch_size=batch_size,
+            num_frames=num_frames,
+            num_features=num_features,
+            channels=channels,
+            mode_info=normalization_mode_range_scaling(),
+        )
+
+    def _declare_feature_normalization(
         self,
         layer_index,
         previous_layer_index,
@@ -54,13 +169,12 @@ class FeatureNormalizationCalculationRules:
         num_frames,
         num_features,
         channels,
-        normalization_mode
+        mode_info
     ):
         batch_size_int = int(batch_size)
         num_frames_int = int(num_frames)
         num_features_int = int(num_features)
         channels_int = int(channels)
-        mode_info = resolve_normalization_mode(normalization_mode)
 
         shapes = build_normalized_stream_shapes(
             batch_size=batch_size_int,

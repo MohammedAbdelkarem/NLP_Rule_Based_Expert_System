@@ -62,3 +62,32 @@ def print_softmax_result(
         output_shape=output_shape,
         parameter_shape=parameter_shape
     )
+
+
+def print_sigmoid_result(
+    layer_index,
+    layer_title,
+    layer_name,
+    layer_kind,
+    input_shape,
+    output_shape,
+    parameter_shape,
+):
+    print_layer_header(layer_index, layer_title)
+
+    print()
+    print("Sigmoid converts one binary logit into a probability between 0 and 1.")
+    print("It is used by binary logistic regression heads.")
+
+    print_shape_block("Input binary logits shape", input_shape, "binary_logits")
+    print_weight_block(parameter_shape)
+    print_shape_block("Output binary probability shape", output_shape, "binary_probability")
+
+    print_simple_stored_facts_block(
+        layer_index=layer_index,
+        layer_name=layer_name,
+        layer_kind=layer_kind,
+        input_shape=input_shape,
+        output_shape=output_shape,
+        parameter_shape=parameter_shape,
+    )
