@@ -1,20 +1,25 @@
-from src.rules.activations.relu import (
-    ReLUParameterRules,
-    ReLUCalculationRules,
-    ReLUOutputRules
-)
 from src.rules.activations.gelu import (
-    GELUParameterRules,
     GELUCalculationRules,
-    GELUOutputRules
+    GELUOutputRules,
+    GELUParameterRules,
+)
+from src.rules.activations.relu import (
+    ReLUCalculationRules,
+    ReLUOutputRules,
+    ReLUParameterRules,
 )
 from src.rules.activations.sigmoid import (
-    SigmoidParameterRules,
     SigmoidCalculationRules,
-    SigmoidOutputRules
+    SigmoidOutputRules,
+    SigmoidParameterRules,
 )
 from src.rules.activations.softmax import (
-    SoftmaxParameterRules,
     SoftmaxCalculationRules,
-    SoftmaxOutputRules
+    SoftmaxOutputRules,
+    SoftmaxParameterRules,
+)
+from src.rules.activations.tanh import (
+    TanhCalculationRules,
+    TanhOutputRules,
+    TanhParameterRules,
 )

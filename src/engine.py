@@ -19,24 +19,21 @@ from src.rules.transformers.compatibility import (
     InputOrderCompatibilityRules,
     ConsecutiveLayerCompatibilityRules,
     DataTypeCompatibilityRules,
-    TensorAcceptanceCompatibilityRules
+    TensorAcceptanceCompatibilityRules,
 )
-
 from src.rules.transformers.input_encoding import (
     InputEncodingParameterRules,
     InputEncodingTokenEmbeddingRules,
     InputEncodingPositionalEmbeddingRules,
     InputEncodingSummationRules,
-    InputEncodingOutputRules
+    InputEncodingOutputRules,
 )
-
 from src.rules.transformers.layer_norm import (
     LayerNormParameterRules,
     LayerNormFirstCalculationRules,
     LayerNormPreviousCalculationRules,
-    LayerNormOutputRules
+    LayerNormOutputRules,
 )
-
 from src.rules.transformers.multi_head_attention import (
     MultiHeadAttentionParameterRules,
     MultiHeadAttentionQKVProjectionRules,
@@ -44,22 +41,19 @@ from src.rules.transformers.multi_head_attention import (
     MultiHeadAttentionSoftmaxRules,
     MultiHeadAttentionWeightedSumRules,
     MultiHeadAttentionOutputProjectionRules,
-    MultiHeadAttentionOutputRules
+    MultiHeadAttentionOutputRules,
 )
-
 from src.rules.transformers.residual_connection import (
     ResidualConnectionParameterRules,
     ResidualConnectionCalculationRules,
-    ResidualConnectionOutputRules
+    ResidualConnectionOutputRules,
 )
-
-
 from src.rules.transformers.feed_forward import (
     FeedForwardParameterRules,
     FeedForwardFirstProjectionRules,
     FeedForwardActivationRules,
     FeedForwardSecondProjectionRules,
-    FeedForwardOutputRules
+    FeedForwardOutputRules,
 )
 
 from src.rules.activations import (
@@ -74,21 +68,22 @@ from src.rules.activations import (
     SoftmaxOutputRules,
     SigmoidParameterRules,
     SigmoidCalculationRules,
-    SigmoidOutputRules
+    SigmoidOutputRules,
+    TanhParameterRules,
+    TanhCalculationRules,
+    TanhOutputRules,
 )
-
 from src.rules.activations.compatibility import (
     ActivationCompatibilityRules,
     SoftmaxActivationCompatibilityRules,
-    SigmoidActivationCompatibilityRules
+    SigmoidActivationCompatibilityRules,
 )
 
 from src.rules.projections.compatibility import LinearProjectionCompatibilityRules
-
 from src.rules.projections import (
     PositionWiseLinearParameterRules,
     PositionWiseLinearCalculationRules,
-    PositionWiseLinearOutputRules
+    PositionWiseLinearOutputRules,
 )
 
 from src.rules.classification_heads import (
@@ -97,10 +92,15 @@ from src.rules.classification_heads import (
     BinaryLogisticRegressionHeadOutputRules,
     MultinomialLogisticRegressionHeadParameterRules,
     MultinomialLogisticRegressionHeadCalculationRules,
-    MultinomialLogisticRegressionHeadOutputRules
+    MultinomialLogisticRegressionHeadOutputRules,
+    FeedforwardClassifierHeadParameterRules,
+    FeedforwardClassifierHeadCalculationRules,
+    FeedforwardClassifierHeadOutputRules,
 )
-
-from src.rules.classification_heads.compatibility import ClassificationHeadCompatibilityRules
+from src.rules.classification_heads.compatibility import (
+    ClassificationHeadCompatibilityRules,
+    FeedforwardClassifierCompatibilityRules,
+)
 
 from src.rules.losses import (
     BinaryCrossEntropyParameterRules,
@@ -108,18 +108,98 @@ from src.rules.losses import (
     BinaryCrossEntropyOutputRules,
     CategoricalCrossEntropyParameterRules,
     CategoricalCrossEntropyCalculationRules,
-    CategoricalCrossEntropyOutputRules
+    CategoricalCrossEntropyOutputRules,
 )
-
 from src.rules.losses.compatibility import LossCompatibilityRules
 
 from src.rules.regularization import (
     L1L2RegularizationParameterRules,
     L1L2RegularizationCalculationRules,
-    L1L2RegularizationOutputRules
+    L1L2RegularizationOutputRules,
+)
+from src.rules.regularization.compatibility import RegularizationCompatibilityRules
+
+from src.rules.embeddings import (
+    TokenEmbeddingCompatibilityRules,
+    PretrainedStaticEmbeddingCompatibilityRules,
+    TokenEmbeddingParameterRules,
+    TokenEmbeddingCalculationRules,
+    TokenEmbeddingOutputRules,
+    PretrainedStaticEmbeddingParameterRules,
+    PretrainedStaticEmbeddingOptionResolutionRules,
+    PretrainedStaticEmbeddingCalculationRules,
+    PretrainedStaticEmbeddingOutputRules,
+    CountBasedEmbeddingParameterRules,
+    CountBasedEmbeddingCalculationRules,
+    CountBasedEmbeddingOutputRules,
+    CoOccurrenceMatrixParameterRules,
+    CoOccurrenceMatrixCalculationRules,
+    CoOccurrenceMatrixOutputRules,
+    CosineSimilarityParameterRules,
+    CosineSimilarityCalculationRules,
+    CosineSimilarityOutputRules,
+    SkipGramSGNSParameterRules,
+    SkipGramSGNSCalculationRules,
+    SkipGramSGNSOutputRules,
+    EmbeddingVisualizationParameterRules,
+    EmbeddingVisualizationCalculationRules,
+    EmbeddingVisualizationOutputRules,
+    EmbeddingBiasAnalysisParameterRules,
+    EmbeddingBiasAnalysisCalculationRules,
+    EmbeddingBiasAnalysisOutputRules,
+    EmbeddingEvaluationParameterRules,
+    EmbeddingEvaluationCalculationRules,
+    EmbeddingEvaluationOutputRules,
+    EmbeddingPoolingCompatibilityRules,
+    EmbeddingToClassifierPoolingParameterRules,
+    EmbeddingToClassifierPoolingCalculationRules,
+    EmbeddingToClassifierPoolingOutputRules,
 )
 
-from src.rules.regularization.compatibility import RegularizationCompatibilityRules
+from src.rules.feedforward import (
+    HiddenDenseActivationBlockParameterRules,
+    HiddenDenseActivationBlockCalculationRules,
+    HiddenDenseActivationBlockOutputRules,
+    FeedforwardMLPBlockParameterRules,
+    FeedforwardMLPBlockCalculationRules,
+    FeedforwardMLPBlockOutputRules,
+)
+from src.rules.feedforward.compatibility import FeedforwardCompatibilityRules
+
+from src.rules.recurrent import (
+    RecurrentInputCompatibilityRules,
+    RecurrentParameterValidationRules,
+    RecurrentOptionResolutionRules,
+    SimpleRNNParameterRules,
+    SimpleRNNFirstCalculationRules,
+    SimpleRNNPreviousCalculationRules,
+    SimpleRNNOutputRules,
+    LSTMParameterRules,
+    LSTMFirstCalculationRules,
+    LSTMPreviousCalculationRules,
+    LSTMOutputRules,
+    StackedRNNParameterRules,
+    StackedRNNFirstCalculationRules,
+    StackedRNNPreviousCalculationRules,
+    StackedRNNOutputRules,
+    BidirectionalRNNParameterRules,
+    BidirectionalRNNFirstCalculationRules,
+    BidirectionalRNNPreviousCalculationRules,
+    BidirectionalRNNOutputRules,
+)
+from src.rules.sequence_to_sequence import (
+    RNNEncoderDecoderParameterRules,
+    RNNEncoderDecoderFirstCalculationRules,
+    RNNEncoderDecoderPreviousCalculationRules,
+    RNNEncoderDecoderOutputRules,
+)
+from src.rules.attention import (
+    RNNAttentionParameterRules,
+    RNNAttentionOptionResolutionRules,
+    RNNAttentionCompatibilityRules,
+    RNNAttentionCalculationRules,
+    RNNAttentionOutputRules,
+)
 
 from src.rules.speech import (
     AudioInputCompatibilityRules,
@@ -154,7 +234,7 @@ from src.rules.speech import (
     DeltaFeatureOutputRules,
     FeatureNormalizationParameterRules,
     FeatureNormalizationCalculationRules,
-    FeatureNormalizationOutputRules
+    FeatureNormalizationOutputRules,
 )
 
 
@@ -170,12 +250,22 @@ class NeuralNetworkExpertSystem(
     DataTypeCompatibilityRules,
     TensorAcceptanceCompatibilityRules,
     ActivationCompatibilityRules,
-    LinearProjectionCompatibilityRules,
     SoftmaxActivationCompatibilityRules,
     SigmoidActivationCompatibilityRules,
+    LinearProjectionCompatibilityRules,
     ClassificationHeadCompatibilityRules,
+    FeedforwardClassifierCompatibilityRules,
     LossCompatibilityRules,
     RegularizationCompatibilityRules,
+    TokenEmbeddingCompatibilityRules,
+    PretrainedStaticEmbeddingCompatibilityRules,
+    EmbeddingPoolingCompatibilityRules,
+    FeedforwardCompatibilityRules,
+    RecurrentInputCompatibilityRules,
+    RecurrentParameterValidationRules,
+    RecurrentOptionResolutionRules,
+    RNNAttentionCompatibilityRules,
+    RNNAttentionOptionResolutionRules,
     AudioInputCompatibilityRules,
     FramingWindowingCompatibilityRules,
     STFTSpectrumCompatibilityRules,
@@ -184,46 +274,6 @@ class NeuralNetworkExpertSystem(
     MFCCCompatibilityRules,
     DeltaFeatureCompatibilityRules,
     FeatureNormalizationCompatibilityRules,
-    AudioInputParameterRules,
-    AudioInputCalculationRules,
-    AudioInputOutputRules,
-    FramingWindowingParameterRules,
-    FramingWindowingCalculationRules,
-    FramingWindowingOutputRules,
-    STFTSpectrumParameterRules,
-    STFTSpectrumCalculationRules,
-    STFTSpectrumOutputRules,
-    MelFilterbankParameterRules,
-    MelFilterbankCalculationRules,
-    MelFilterbankOutputRules,
-    LogMelSpectrogramParameterRules,
-    LogMelSpectrogramCalculationRules,
-    LogMelSpectrogramOutputRules,
-    MFCCParameterRules,
-    MFCCCalculationRules,
-    MFCCOutputRules,
-    DeltaFeatureParameterRules,
-    DeltaFeatureCalculationRules,
-    DeltaFeatureAdapterRules,
-    DeltaFeatureOutputRules,
-    FeatureNormalizationParameterRules,
-    FeatureNormalizationCalculationRules,
-    FeatureNormalizationOutputRules,
-    BinaryLogisticRegressionHeadParameterRules,
-    BinaryLogisticRegressionHeadCalculationRules,
-    BinaryLogisticRegressionHeadOutputRules,
-    MultinomialLogisticRegressionHeadParameterRules,
-    MultinomialLogisticRegressionHeadCalculationRules,
-    MultinomialLogisticRegressionHeadOutputRules,
-    BinaryCrossEntropyParameterRules,
-    BinaryCrossEntropyCalculationRules,
-    BinaryCrossEntropyOutputRules,
-    CategoricalCrossEntropyParameterRules,
-    CategoricalCrossEntropyCalculationRules,
-    CategoricalCrossEntropyOutputRules,
-    L1L2RegularizationParameterRules,
-    L1L2RegularizationCalculationRules,
-    L1L2RegularizationOutputRules,
     InputEncodingParameterRules,
     InputEncodingTokenEmbeddingRules,
     InputEncodingPositionalEmbeddingRules,
@@ -254,15 +304,121 @@ class NeuralNetworkExpertSystem(
     GELUParameterRules,
     GELUCalculationRules,
     GELUOutputRules,
-    PositionWiseLinearParameterRules,
-    PositionWiseLinearCalculationRules,
-    PositionWiseLinearOutputRules,
     SoftmaxParameterRules,
     SoftmaxCalculationRules,
     SoftmaxOutputRules,
     SigmoidParameterRules,
     SigmoidCalculationRules,
     SigmoidOutputRules,
-    KnowledgeEngine
+    TanhParameterRules,
+    TanhCalculationRules,
+    TanhOutputRules,
+    PositionWiseLinearParameterRules,
+    PositionWiseLinearCalculationRules,
+    PositionWiseLinearOutputRules,
+    BinaryLogisticRegressionHeadParameterRules,
+    BinaryLogisticRegressionHeadCalculationRules,
+    BinaryLogisticRegressionHeadOutputRules,
+    MultinomialLogisticRegressionHeadParameterRules,
+    MultinomialLogisticRegressionHeadCalculationRules,
+    MultinomialLogisticRegressionHeadOutputRules,
+    FeedforwardClassifierHeadParameterRules,
+    FeedforwardClassifierHeadCalculationRules,
+    FeedforwardClassifierHeadOutputRules,
+    BinaryCrossEntropyParameterRules,
+    BinaryCrossEntropyCalculationRules,
+    BinaryCrossEntropyOutputRules,
+    CategoricalCrossEntropyParameterRules,
+    CategoricalCrossEntropyCalculationRules,
+    CategoricalCrossEntropyOutputRules,
+    L1L2RegularizationParameterRules,
+    L1L2RegularizationCalculationRules,
+    L1L2RegularizationOutputRules,
+    TokenEmbeddingParameterRules,
+    TokenEmbeddingCalculationRules,
+    TokenEmbeddingOutputRules,
+    PretrainedStaticEmbeddingParameterRules,
+    PretrainedStaticEmbeddingOptionResolutionRules,
+    PretrainedStaticEmbeddingCalculationRules,
+    PretrainedStaticEmbeddingOutputRules,
+    CountBasedEmbeddingParameterRules,
+    CountBasedEmbeddingCalculationRules,
+    CountBasedEmbeddingOutputRules,
+    CoOccurrenceMatrixParameterRules,
+    CoOccurrenceMatrixCalculationRules,
+    CoOccurrenceMatrixOutputRules,
+    CosineSimilarityParameterRules,
+    CosineSimilarityCalculationRules,
+    CosineSimilarityOutputRules,
+    SkipGramSGNSParameterRules,
+    SkipGramSGNSCalculationRules,
+    SkipGramSGNSOutputRules,
+    EmbeddingVisualizationParameterRules,
+    EmbeddingVisualizationCalculationRules,
+    EmbeddingVisualizationOutputRules,
+    EmbeddingBiasAnalysisParameterRules,
+    EmbeddingBiasAnalysisCalculationRules,
+    EmbeddingBiasAnalysisOutputRules,
+    EmbeddingEvaluationParameterRules,
+    EmbeddingEvaluationCalculationRules,
+    EmbeddingEvaluationOutputRules,
+    EmbeddingToClassifierPoolingParameterRules,
+    EmbeddingToClassifierPoolingCalculationRules,
+    EmbeddingToClassifierPoolingOutputRules,
+    HiddenDenseActivationBlockParameterRules,
+    HiddenDenseActivationBlockCalculationRules,
+    HiddenDenseActivationBlockOutputRules,
+    FeedforwardMLPBlockParameterRules,
+    FeedforwardMLPBlockCalculationRules,
+    FeedforwardMLPBlockOutputRules,
+    SimpleRNNParameterRules,
+    SimpleRNNFirstCalculationRules,
+    SimpleRNNPreviousCalculationRules,
+    SimpleRNNOutputRules,
+    LSTMParameterRules,
+    LSTMFirstCalculationRules,
+    LSTMPreviousCalculationRules,
+    LSTMOutputRules,
+    StackedRNNParameterRules,
+    StackedRNNFirstCalculationRules,
+    StackedRNNPreviousCalculationRules,
+    StackedRNNOutputRules,
+    BidirectionalRNNParameterRules,
+    BidirectionalRNNFirstCalculationRules,
+    BidirectionalRNNPreviousCalculationRules,
+    BidirectionalRNNOutputRules,
+    RNNEncoderDecoderParameterRules,
+    RNNEncoderDecoderFirstCalculationRules,
+    RNNEncoderDecoderPreviousCalculationRules,
+    RNNEncoderDecoderOutputRules,
+    RNNAttentionParameterRules,
+    RNNAttentionCalculationRules,
+    RNNAttentionOutputRules,
+    AudioInputParameterRules,
+    AudioInputCalculationRules,
+    AudioInputOutputRules,
+    FramingWindowingParameterRules,
+    FramingWindowingCalculationRules,
+    FramingWindowingOutputRules,
+    STFTSpectrumParameterRules,
+    STFTSpectrumCalculationRules,
+    STFTSpectrumOutputRules,
+    MelFilterbankParameterRules,
+    MelFilterbankCalculationRules,
+    MelFilterbankOutputRules,
+    LogMelSpectrogramParameterRules,
+    LogMelSpectrogramCalculationRules,
+    LogMelSpectrogramOutputRules,
+    MFCCParameterRules,
+    MFCCCalculationRules,
+    MFCCOutputRules,
+    DeltaFeatureParameterRules,
+    DeltaFeatureCalculationRules,
+    DeltaFeatureAdapterRules,
+    DeltaFeatureOutputRules,
+    FeatureNormalizationParameterRules,
+    FeatureNormalizationCalculationRules,
+    FeatureNormalizationOutputRules,
+    KnowledgeEngine,
 ):
     engine_name = "neural_network_expert_system"

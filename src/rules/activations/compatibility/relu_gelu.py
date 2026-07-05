@@ -24,7 +24,7 @@ class ActivationCompatibilityRules:
             previous_layer_index=MATCH.previous_layer_index,
             layer_name=MATCH.layer_name
         ),
-        TEST(lambda layer_name: layer_name == "relu" or layer_name == "gelu"),
+        TEST(lambda layer_name: layer_name == "relu" or layer_name == "gelu" or layer_name == "tanh"),
         NOT(RollbackRequest(
             layer_index=MATCH.layer_index,
             layer_name=MATCH.layer_name
@@ -61,7 +61,7 @@ class ActivationCompatibilityRules:
             layer_index=MATCH.previous_layer_index,
             layer_role="activation"
         ),
-        TEST(lambda current_layer_name: current_layer_name == "relu" or current_layer_name == "gelu" or current_layer_name == "softmax"),
+        TEST(lambda current_layer_name: current_layer_name == "relu" or current_layer_name == "gelu" or current_layer_name == "tanh" or current_layer_name == "softmax"),
         NOT(RollbackRequest(
             layer_index=MATCH.layer_index,
             layer_name=MATCH.current_layer_name
@@ -92,7 +92,7 @@ class ActivationCompatibilityRules:
             previous_layer_index=MATCH.previous_layer_index,
             layer_name=MATCH.layer_name
         ),
-        TEST(lambda layer_name: layer_name == "relu" or layer_name == "gelu"),
+        TEST(lambda layer_name: layer_name == "relu" or layer_name == "gelu" or layer_name == "tanh"),
         TensorInfo(
             layer_index=MATCH.previous_layer_index,
             role="output",

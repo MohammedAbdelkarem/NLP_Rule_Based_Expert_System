@@ -1,15 +1,221 @@
 from src.facts import (
-    ComponentGroup,
     CalculationStep,
+    ComponentGroup,
     IntermediateTensor,
+    Layer,
     LayerMetadata,
     TensorInfo,
+    TransformerStage,
     WeightShape,
 )
 
 
-def make_shape(*dims):
-    return f"({', '.join(str(dim) for dim in dims)})"
+def classifier_parameter_shape(input_dim, hidden_dim, output_dim):
+    return (
+        f"W_hidden: ({input_dim}, {hidden_dim}), "
+        f"b_hidden: ({hidden_dim},), "
+        f"W_out: ({hidden_dim}, {output_dim}), "
+        f"b_out: ({output_dim},)"
+    )
+
+
+def classifier_shape(batch_size, feature_dim):
+    return f"({batch_size}, {feature_dim})"
+
+
+def declare_classifier_metadata(
+    engine,
+    layer_index,
+    batch_size,
+    output_dim,
+    classifier_mode,
+):
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="output_batch_size",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(batch_size),
+        data_type="integer_dimension_value",
+        source="classifier_input_batch_size",
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="output_model_dim",
+        role="shape_metadata",
+        dims_count=1,
+        shape=str(output_dim),
+        data_type="integer_dimension_value",
+        source="classifier_output_dimension",
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="classifier_mode",
+        role="configuration",
+        dims_count=1,
+        shape=classifier_mode,
+        data_type="configuration_value",
+        source="user_selected_classifier_mode",
+    ))
+
+
+def declare_classifier_intermediates(
+    engine,
+    layer_index,
+    hidden_shape,
+    logits_shape,
+    probability_shape,
+    probability_source,
+):
+    engine.declare(IntermediateTensor(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="hidden_projection_output",
+        shape=hidden_shape,
+        data_type="float_hidden_tensor",
+        source="trainable_hidden_projection",
+    ))
+    engine.declare(IntermediateTensor(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="activation_output",
+        shape=hidden_shape,
+        data_type="float_hidden_tensor",
+        source="hidden_nonlinear_activation",
+    ))
+    engine.declare(IntermediateTensor(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="logits_output",
+        shape=logits_shape,
+        data_type="logits",
+        source="trainable_output_projection",
+    ))
+    engine.declare(TensorInfo(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        tensor_name="classifier_probability_output",
+        role="output",
+        dims_count=2,
+        shape=probability_shape,
+        data_type="probabilities",
+        source=probability_source,
+    ))
+
+
+def declare_classifier_common(
+    engine,
+    layer_index,
+    layer_title,
+    input_shape,
+    hidden_shape,
+    logits_shape,
+    probability_shape,
+    input_dim,
+    hidden_dim,
+    output_dim,
+    batch_size,
+    classifier_mode,
+    probability_activation,
+):
+    parameter_shape = classifier_parameter_shape(input_dim, hidden_dim, output_dim)
+    internal_layers = (
+        "Hidden dense projection + ReLU activation + "
+        f"output projection + {probability_activation}"
+    )
+    combine_operation = (
+        "The hidden projection learns features, the output projection produces logits, "
+        f"and {probability_activation} converts logits into probabilities."
+    )
+    engine.declare(WeightShape(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        weight_name="feedforward_classifier_parameters",
+        shape=parameter_shape,
+    ))
+    declare_classifier_intermediates(
+        engine=engine,
+        layer_index=layer_index,
+        hidden_shape=hidden_shape,
+        logits_shape=logits_shape,
+        probability_shape=probability_shape,
+        probability_source=f"{probability_activation}_probability_activation",
+    )
+    declare_classifier_metadata(
+        engine=engine,
+        layer_index=layer_index,
+        batch_size=batch_size,
+        output_dim=output_dim,
+        classifier_mode=classifier_mode,
+    )
+    engine.declare(ComponentGroup(
+        group_index=layer_index,
+        group_name="feedforward_classifier_head",
+        group_title=layer_title,
+        internal_layers=internal_layers,
+        combine_operation=combine_operation,
+        input_shape=input_shape,
+        output_shape=probability_shape,
+        status="computed",
+    ))
+    engine.declare(LayerMetadata(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        layer_kind="classifier_head",
+        layer_role="classification_output_head",
+        repeat_policy="single_terminal_head",
+        consecutive_repeat_policy="no_consecutive_repeat",
+        terminal_status="terminal",
+    ))
+    engine.declare(TransformerStage(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        stage_name="feedforward_classifier_head_completed",
+        status="computed",
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        step_key=f"layer_{layer_index}_classifier_hidden_projection_shape",
+        previous_step_key="none",
+        step_order=1,
+        title="Classifier hidden projection shape",
+        formula="H = XW_hidden + b_hidden",
+        substitution=f"input_dim={input_dim}, hidden_dim={hidden_dim}",
+        result=hidden_shape,
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        step_key=f"layer_{layer_index}_classifier_logits_shape",
+        previous_step_key=f"layer_{layer_index}_classifier_hidden_projection_shape",
+        step_order=2,
+        title="Classifier logits shape",
+        formula="Z = ReLU(H)W_out + b_out",
+        substitution=f"hidden_dim={hidden_dim}, output_dim={output_dim}",
+        result=logits_shape,
+    ))
+    engine.declare(CalculationStep(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        step_key=f"layer_{layer_index}_classifier_probability_shape",
+        previous_step_key=f"layer_{layer_index}_classifier_logits_shape",
+        step_order=3,
+        title="Classifier probability shape",
+        formula=f"Y = {probability_activation}(Z)",
+        substitution=classifier_mode,
+        result=probability_shape,
+    ))
+    engine.declare(Layer(
+        layer_index=layer_index,
+        layer_name="feedforward_classifier_head",
+        layer_title=layer_title,
+        input_shape=input_shape,
+        output_shape=probability_shape,
+    ))
 
 
 def make_rank_2_shape(batch_size, feature_dim):
@@ -26,92 +232,6 @@ def make_rank_2_class_index_label_shape(batch_size):
 
 def make_rank_3_class_index_label_shape(batch_size, sequence_length):
     return f"({batch_size}, {sequence_length})"
-
-
-def make_label_shape(batch_size, sequence_length=None):
-    if sequence_length is None:
-        return make_rank_2_class_index_label_shape(batch_size)
-    return make_rank_3_class_index_label_shape(batch_size, sequence_length)
-
-
-def declare_output_shape_metadata(
-    engine,
-    layer_index,
-    layer_name,
-    batch_size,
-    output_dim,
-    batch_source,
-    output_dim_source,
-    sequence_length=None,
-    sequence_source=None,
-):
-    if sequence_length is None:
-        declare_output_shape_metadata_rank_2(
-            engine=engine,
-            layer_index=layer_index,
-            layer_name=layer_name,
-            batch_size=batch_size,
-            output_dim=output_dim,
-            batch_source=batch_source,
-            output_dim_source=output_dim_source,
-        )
-        return
-
-    declare_output_shape_metadata_rank_3(
-        engine=engine,
-        layer_index=layer_index,
-        layer_name=layer_name,
-        batch_size=batch_size,
-        output_dim=output_dim,
-        sequence_length=sequence_length,
-        batch_source=batch_source,
-        output_dim_source=output_dim_source,
-        sequence_source=sequence_source,
-    )
-
-
-def declare_logistic_head(
-    engine,
-    layer_index,
-    layer_name,
-    layer_title,
-    input_shape,
-    output_shape,
-    input_dim,
-    batch_size,
-    output_dim=1,
-    sequence_length=None,
-    batch_source="classifier_input_batch_size",
-    output_dim_source="classifier_output_dimension",
-    sequence_source="classifier_input_sequence_length",
-):
-    if sequence_length is None:
-        declare_binary_logistic_head_rank_2(
-            engine=engine,
-            layer_index=layer_index,
-            layer_title=layer_title,
-            input_shape=input_shape,
-            output_shape=output_shape,
-            input_dim=input_dim,
-            batch_size=batch_size,
-            batch_source=batch_source,
-            output_dim_source=output_dim_source,
-        )
-        return
-
-    declare_binary_logistic_head_rank_3(
-        engine=engine,
-        layer_index=layer_index,
-        layer_title=layer_title,
-        input_shape=input_shape,
-        output_shape=output_shape,
-        input_dim=input_dim,
-        batch_size=batch_size,
-        sequence_length=sequence_length,
-        batch_source=batch_source,
-        output_dim_source=output_dim_source,
-        sequence_source=sequence_source,
-    )
 
 
 def declare_output_shape_metadata_rank_2(
@@ -218,14 +338,12 @@ def declare_logistic_head_base(
         output_shape=output_shape,
         status="computed",
     ))
-
     engine.declare(WeightShape(
         layer_index=layer_index,
         layer_name=layer_name,
         weight_name="classifier_parameters",
         shape=parameter_shape,
     ))
-
     engine.declare(IntermediateTensor(
         layer_index=layer_index,
         layer_name=layer_name,
@@ -234,7 +352,6 @@ def declare_logistic_head_base(
         data_type="logits",
         source="linear_logits_projection",
     ))
-
     engine.declare(TensorInfo(
         layer_index=layer_index,
         layer_name=layer_name,
@@ -245,7 +362,6 @@ def declare_logistic_head_base(
         data_type=output_data_type,
         source=f"{activation_name}_probability_activation",
     ))
-
     engine.declare(LayerMetadata(
         layer_index=layer_index,
         layer_name=layer_name,
@@ -255,7 +371,6 @@ def declare_logistic_head_base(
         consecutive_repeat_policy="no_consecutive_classification_head",
         terminal_status="terminal",
     ))
-
     engine.declare(CalculationStep(
         layer_index=layer_index,
         layer_name=layer_name,
@@ -267,7 +382,6 @@ def declare_logistic_head_base(
         substitution=f"{input_shape} × ({input_dim}, {output_dim}) + ({output_dim},)",
         result=logits_shape,
     ))
-
     engine.declare(CalculationStep(
         layer_index=layer_index,
         layer_name=layer_name,

@@ -3,3 +3,11 @@ from src.utils.printing.transformers import *
 from src.utils.printing.activations import *
 from src.utils.printing.projections import *
 from src.utils.printing.speech import *
+from src.utils.printing.embeddings import *
+from src.utils.printing.embedding_feature_extraction import *
+from src.utils.printing.embedding_similarity import *
+from src.utils.printing.embedding_training import *
+from src.utils.printing.embedding_analysis import *
+from src.utils.printing.recurrent import *
+from src.utils.printing.sequence_to_sequence import *
+from src.utils.printing.rnn_attention import *

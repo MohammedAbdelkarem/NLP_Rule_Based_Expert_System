@@ -1,0 +1,1 @@
+from src.rules.feedforward.compatibility.feedforward import FeedforwardCompatibilityRules

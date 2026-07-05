@@ -10,10 +10,10 @@ from src.facts.interaction_facts import (
 from src.facts.architecture_facts import (
     Layer,
     ComponentGroup,
-    TrainingComponent,
     LayerMetadata,
     CompatibilityResult,
-    TransformationSuggestion
+    TransformationSuggestion,
+    TrainingComponent
 )
 
 from src.facts.tensor_facts import (

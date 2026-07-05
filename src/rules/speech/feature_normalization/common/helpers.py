@@ -312,15 +312,6 @@ def declare_normalization_tensors(
     )
 
 
-def resolve_normalization_mode(mode_name):
-    mode_name = (mode_name or "").strip().lower()
-    if mode_name in {"cmvn", "cmvn_standardization", "standardization"}:
-        return normalization_mode_cmvn()
-    if mode_name in {"range", "range_scaling", "range_scaling_minus_one_to_one"}:
-        return normalization_mode_range_scaling()
-    raise ValueError(f"Unsupported normalization mode: {mode_name}")
-
-
 def declare_normalization_steps(
     engine,
     layer_index,

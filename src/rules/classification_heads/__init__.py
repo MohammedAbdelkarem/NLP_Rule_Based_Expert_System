@@ -1,10 +1,15 @@
 from src.rules.classification_heads.binary_logistic_regression_head import (
-    BinaryLogisticRegressionHeadParameterRules,
     BinaryLogisticRegressionHeadCalculationRules,
     BinaryLogisticRegressionHeadOutputRules,
+    BinaryLogisticRegressionHeadParameterRules,
+)
+from src.rules.classification_heads.feedforward_classifier_head import (
+    FeedforwardClassifierHeadCalculationRules,
+    FeedforwardClassifierHeadOutputRules,
+    FeedforwardClassifierHeadParameterRules,
 )
 from src.rules.classification_heads.multinomial_logistic_regression_head import (
-    MultinomialLogisticRegressionHeadParameterRules,
     MultinomialLogisticRegressionHeadCalculationRules,
     MultinomialLogisticRegressionHeadOutputRules,
+    MultinomialLogisticRegressionHeadParameterRules,
 )

@@ -1,0 +1,61 @@
+from experta import Rule, MATCH, NOT
+
+from src.facts import SelectedLayer, LayerParameter
+from src.prompts import (
+    TOKEN_EMBEDDING_SELECTED,
+    ASK_BATCH_SIZE,
+    ASK_SEQUENCE_LENGTH,
+    ASK_VOCAB_SIZE,
+    ASK_EMBEDDING_DIM,
+)
+
+
+class TokenEmbeddingParameterRules:
+    @Rule(
+        SelectedLayer(
+            layer_index=MATCH.layer_index,
+            previous_layer_index=0,
+            layer_name="token_embedding"
+        ),
+        NOT(LayerParameter(
+            layer_index=MATCH.layer_index,
+            layer_name="token_embedding",
+            parameter_name="batch_size"
+        )),
+        salience=70
+    )
+    def ask_token_embedding_parameters(self, layer_index):
+        print(TOKEN_EMBEDDING_SELECTED)
+
+        batch_size = int(input(ASK_BATCH_SIZE))
+        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
+        vocab_size = int(input(ASK_VOCAB_SIZE))
+        embedding_dim = int(input(ASK_EMBEDDING_DIM))
+
+        self.declare(LayerParameter(
+            layer_index=layer_index,
+            layer_name="token_embedding",
+            parameter_name="batch_size",
+            value=batch_size
+        ))
+
+        self.declare(LayerParameter(
+            layer_index=layer_index,
+            layer_name="token_embedding",
+            parameter_name="sequence_length",
+            value=sequence_length
+        ))
+
+        self.declare(LayerParameter(
+            layer_index=layer_index,
+            layer_name="token_embedding",
+            parameter_name="vocab_size",
+            value=vocab_size
+        ))
+
+        self.declare(LayerParameter(
+            layer_index=layer_index,
+            layer_name="token_embedding",
+            parameter_name="embedding_dim",
+            value=embedding_dim
+        ))
