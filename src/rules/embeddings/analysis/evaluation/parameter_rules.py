@@ -9,6 +9,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class EmbeddingEvaluationParameterRules:
     @Rule(
         SelectedLayer(
@@ -25,9 +26,9 @@ class EmbeddingEvaluationParameterRules:
     def ask_embedding_evaluation_parameters(self, layer_index):
         print(EMBEDDING_EVALUATION_SELECTED)
 
-        evaluation_pair_count = int(input(ASK_EVALUATION_PAIR_COUNT))
-        embedding_dim = int(input(ASK_EMBEDDING_DIM))
-        benchmark_count = int(input(ASK_BENCHMARK_COUNT))
+        evaluation_pair_count = read_int_parameter(ASK_EVALUATION_PAIR_COUNT)
+        embedding_dim = read_int_parameter(ASK_EMBEDDING_DIM)
+        benchmark_count = read_int_parameter(ASK_BENCHMARK_COUNT)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -70,7 +71,7 @@ class EmbeddingEvaluationParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input("Enter a corrected positive value: "))
+        new_value = read_int_parameter("Enter a corrected positive value: ")
 
         self.declare(LayerParameter(
             layer_index=layer_index,

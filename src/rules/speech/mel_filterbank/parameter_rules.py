@@ -9,6 +9,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class MelFilterbankParameterRules:
     @Rule(
         SelectedLayer(
@@ -25,9 +26,9 @@ class MelFilterbankParameterRules:
     def ask_mel_filterbank_parameters(self, layer_index):
         print(MEL_FILTERBANK_SELECTED)
 
-        num_mel_filters = int(input(ASK_NUM_MEL_FILTERS))
-        min_frequency_hz = int(input(ASK_MEL_MIN_FREQUENCY_HZ))
-        max_frequency_hz = int(input(ASK_MEL_MAX_FREQUENCY_HZ))
+        num_mel_filters = read_int_parameter(ASK_NUM_MEL_FILTERS)
+        min_frequency_hz = read_int_parameter(ASK_MEL_MIN_FREQUENCY_HZ)
+        max_frequency_hz = read_int_parameter(ASK_MEL_MAX_FREQUENCY_HZ)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -69,7 +70,7 @@ class MelFilterbankParameterRules:
 
         self.retract(num_mel_filters_fact)
 
-        new_num_mel_filters = int(input(ASK_NUM_MEL_FILTERS))
+        new_num_mel_filters = read_int_parameter(ASK_NUM_MEL_FILTERS)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -99,7 +100,7 @@ class MelFilterbankParameterRules:
 
         self.retract(min_frequency_fact)
 
-        new_min_frequency_hz = int(input(ASK_MEL_MIN_FREQUENCY_HZ))
+        new_min_frequency_hz = read_int_parameter(ASK_MEL_MIN_FREQUENCY_HZ)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

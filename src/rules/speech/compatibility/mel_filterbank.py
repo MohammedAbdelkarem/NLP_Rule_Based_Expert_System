@@ -10,6 +10,7 @@ from src.facts import (
 from src.prompts import ASK_MEL_MIN_FREQUENCY_HZ, ASK_MEL_MAX_FREQUENCY_HZ
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class MelFilterbankCompatibilityRules:
     @Rule(
         SelectedLayer(
@@ -178,7 +179,7 @@ class MelFilterbankCompatibilityRules:
 
         self.retract(max_frequency_fact)
 
-        new_max_frequency_hz = int(input(ASK_MEL_MAX_FREQUENCY_HZ))
+        new_max_frequency_hz = read_int_parameter(ASK_MEL_MAX_FREQUENCY_HZ)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -215,7 +216,7 @@ class MelFilterbankCompatibilityRules:
 
         self.retract(max_frequency_fact)
 
-        new_max_frequency_hz = int(input(ASK_MEL_MAX_FREQUENCY_HZ))
+        new_max_frequency_hz = read_int_parameter(ASK_MEL_MAX_FREQUENCY_HZ)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

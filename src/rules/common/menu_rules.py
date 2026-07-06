@@ -4,6 +4,7 @@ from src.facts import MenuChoice, SelectedLayer, SessionStatus
 from src.prompts import MAIN_MENU, ASK_ROLLBACK_LAYER
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class MenuRules:
     @Rule(
         MenuChoice(
@@ -860,7 +861,7 @@ class MenuRules:
 
         self.retract(menu_choice_fact)
 
-        new_choice = input(ASK_ROLLBACK_LAYER)
+        new_choice = read_text_parameter(ASK_ROLLBACK_LAYER)
 
         self.declare(MenuChoice(
             layer_index=layer_index,

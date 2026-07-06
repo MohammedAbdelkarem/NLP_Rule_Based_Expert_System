@@ -4,6 +4,7 @@ from src.facts import OptionSelection, SelectedLayer
 from src.prompts import ASK_LOSS_REDUCTION, BINARY_CROSS_ENTROPY_SELECTED
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class BinaryCrossEntropyParameterRules:
     @Rule(
         SelectedLayer(layer_index=MATCH.layer_index, layer_name="binary_cross_entropy"),
@@ -18,7 +19,7 @@ class BinaryCrossEntropyParameterRules:
     )
     def ask_binary_cross_entropy_reduction(self, layer_index):
         print(BINARY_CROSS_ENTROPY_SELECTED)
-        choice = input(ASK_LOSS_REDUCTION)
+        choice = read_text_parameter(ASK_LOSS_REDUCTION)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -94,7 +95,7 @@ class BinaryCrossEntropyParameterRules:
     def ask_bce_reduction_again(self, option_fact, layer_index):
         print("Invalid reduction choice. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_LOSS_REDUCTION)
+        choice = read_text_parameter(ASK_LOSS_REDUCTION)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,

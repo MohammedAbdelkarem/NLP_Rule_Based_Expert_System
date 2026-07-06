@@ -12,6 +12,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class FeedforwardClassifierHeadParameterRules:
     @Rule(
         SelectedLayer(
@@ -28,7 +29,7 @@ class FeedforwardClassifierHeadParameterRules:
     )
     def ask_first_classifier_input_kind(self, layer_index):
         print(FEEDFORWARD_CLASSIFIER_HEAD_SELECTED)
-        choice = input(ASK_CLASSIFIER_INPUT_KIND)
+        choice = read_text_parameter(ASK_CLASSIFIER_INPUT_KIND)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="feedforward_classifier_head",
@@ -122,7 +123,7 @@ class FeedforwardClassifierHeadParameterRules:
         print()
         print("Invalid input kind choice. Please choose 1, 2, or 3.")
         self.retract(option_fact)
-        new_choice = input(ASK_CLASSIFIER_INPUT_KIND)
+        new_choice = read_text_parameter(ASK_CLASSIFIER_INPUT_KIND)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="feedforward_classifier_head",
@@ -153,10 +154,10 @@ class FeedforwardClassifierHeadParameterRules:
         salience=70,
     )
     def ask_first_classifier_vector_parameters(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        input_dim = int(input(ASK_FEATURE_DIM))
-        hidden_dim = int(input(ASK_HIDDEN_DIM))
-        classifier_choice = input(ASK_CLASSIFIER_MODE)
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        input_dim = read_int_parameter(ASK_FEATURE_DIM)
+        hidden_dim = read_int_parameter(ASK_HIDDEN_DIM)
+        classifier_choice = read_text_parameter(ASK_CLASSIFIER_MODE)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="feedforward_classifier_head",
@@ -204,8 +205,8 @@ class FeedforwardClassifierHeadParameterRules:
         salience=70,
     )
     def ask_classifier_after_previous_parameters(self, layer_index):
-        hidden_dim = int(input(ASK_HIDDEN_DIM))
-        classifier_choice = input(ASK_CLASSIFIER_MODE)
+        hidden_dim = read_int_parameter(ASK_HIDDEN_DIM)
+        classifier_choice = read_text_parameter(ASK_CLASSIFIER_MODE)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="feedforward_classifier_head",
@@ -282,7 +283,7 @@ class FeedforwardClassifierHeadParameterRules:
         print()
         print("Invalid classifier mode. Please choose 1 or 2.")
         self.retract(option_fact)
-        new_choice = input(ASK_CLASSIFIER_MODE)
+        new_choice = read_text_parameter(ASK_CLASSIFIER_MODE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="feedforward_classifier_head",
@@ -331,7 +332,7 @@ class FeedforwardClassifierHeadParameterRules:
         salience=67,
     )
     def ask_multiclass_output_count(self, layer_index):
-        num_classes = int(input(ASK_NUM_CLASSES))
+        num_classes = read_int_parameter(ASK_NUM_CLASSES)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="feedforward_classifier_head",

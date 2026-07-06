@@ -10,6 +10,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class EmbeddingToClassifierPoolingParameterRules:
     @Rule(
         SelectedLayer(
@@ -26,7 +27,7 @@ class EmbeddingToClassifierPoolingParameterRules:
     )
     def ask_first_pooling_input_kind(self, layer_index):
         print(EMBEDDING_POOLING_SELECTED)
-        choice = input(ASK_POOLING_INPUT_KIND)
+        choice = read_text_parameter(ASK_POOLING_INPUT_KIND)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="embedding_to_classifier_pooling",
@@ -120,7 +121,7 @@ class EmbeddingToClassifierPoolingParameterRules:
         print()
         print("Invalid pooling input kind. Please choose 1, 2, or 3.")
         self.retract(option_fact)
-        new_choice = input(ASK_POOLING_INPUT_KIND)
+        new_choice = read_text_parameter(ASK_POOLING_INPUT_KIND)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="embedding_to_classifier_pooling",
@@ -151,9 +152,9 @@ class EmbeddingToClassifierPoolingParameterRules:
         salience=70,
     )
     def ask_first_pooling_shape_parameters(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        embedding_dim = int(input(ASK_EMBEDDING_DIM))
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        embedding_dim = read_int_parameter(ASK_EMBEDDING_DIM)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="embedding_to_classifier_pooling",

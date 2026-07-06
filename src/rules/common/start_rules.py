@@ -5,6 +5,7 @@ from src.facts import MenuChoice, OutputStatus
 from src.prompts import MAIN_MENU, CHOOSE_FIRST_LAYER
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class StartRules:
     @Rule(
         InitialFact(),
@@ -18,7 +19,7 @@ class StartRules:
     def show_main_menu(self):
         print(MAIN_MENU)
 
-        choice = input(CHOOSE_FIRST_LAYER)
+        choice = read_text_parameter(CHOOSE_FIRST_LAYER)
 
         self.declare(MenuChoice(
             layer_index=1,

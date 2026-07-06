@@ -17,6 +17,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class PositionWiseLinearParameterRules:
     @Rule(
         SelectedLayer(
@@ -34,7 +35,7 @@ class PositionWiseLinearParameterRules:
     def ask_first_position_wise_linear_input_kind(self, layer_index):
         print(POSITION_WISE_LINEAR_SELECTED)
 
-        choice = input(ASK_POSITION_WISE_LINEAR_INPUT_KIND)
+        choice = read_text_parameter(ASK_POSITION_WISE_LINEAR_INPUT_KIND)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -123,7 +124,7 @@ class PositionWiseLinearParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_POSITION_WISE_LINEAR_INPUT_KIND)
+        new_choice = read_text_parameter(ASK_POSITION_WISE_LINEAR_INPUT_KIND)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -155,10 +156,10 @@ class PositionWiseLinearParameterRules:
         salience=70
     )
     def ask_first_position_wise_linear_parameters(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        input_dim = int(input(ASK_INPUT_DIM))
-        output_dim = int(input(ASK_POSITION_WISE_LINEAR_OUTPUT_DIM))
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        input_dim = read_int_parameter(ASK_INPUT_DIM)
+        output_dim = read_int_parameter(ASK_POSITION_WISE_LINEAR_OUTPUT_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -236,7 +237,7 @@ class PositionWiseLinearParameterRules:
         sequence_length,
         model_dim
     ):
-        output_dim = int(input(ASK_POSITION_WISE_LINEAR_OUTPUT_DIM))
+        output_dim = read_int_parameter(ASK_POSITION_WISE_LINEAR_OUTPUT_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -287,7 +288,7 @@ class PositionWiseLinearParameterRules:
 
         self.retract(output_dim_fact)
 
-        new_output_dim = int(input(ASK_POSITION_WISE_LINEAR_OUTPUT_DIM))
+        new_output_dim = read_int_parameter(ASK_POSITION_WISE_LINEAR_OUTPUT_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -316,7 +317,7 @@ class PositionWiseLinearParameterRules:
         salience=68
     )
     def ask_position_wise_linear_purpose(self, layer_index, output_dim):
-        choice = input(ASK_POSITION_WISE_LINEAR_PURPOSE)
+        choice = read_text_parameter(ASK_POSITION_WISE_LINEAR_PURPOSE)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -405,7 +406,7 @@ class PositionWiseLinearParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_POSITION_WISE_LINEAR_PURPOSE)
+        new_choice = read_text_parameter(ASK_POSITION_WISE_LINEAR_PURPOSE)
 
         self.declare(OptionSelection(
             layer_index=layer_index,

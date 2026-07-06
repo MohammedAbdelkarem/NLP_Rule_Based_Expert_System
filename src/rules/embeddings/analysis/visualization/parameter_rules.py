@@ -9,6 +9,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class EmbeddingVisualizationParameterRules:
     @Rule(
         SelectedLayer(
@@ -25,9 +26,9 @@ class EmbeddingVisualizationParameterRules:
     def ask_embedding_visualization_parameters(self, layer_index):
         print(EMBEDDING_VISUALIZATION_SELECTED)
 
-        num_items = int(input(ASK_NUM_EMBEDDED_ITEMS))
-        embedding_dim = int(input(ASK_EMBEDDING_DIM))
-        visualization_dim = int(input(ASK_VISUALIZATION_DIM))
+        num_items = read_int_parameter(ASK_NUM_EMBEDDED_ITEMS)
+        embedding_dim = read_int_parameter(ASK_EMBEDDING_DIM)
+        visualization_dim = read_int_parameter(ASK_VISUALIZATION_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -70,7 +71,7 @@ class EmbeddingVisualizationParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input("Enter a corrected positive value: "))
+        new_value = read_int_parameter("Enter a corrected positive value: ")
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -100,7 +101,7 @@ class EmbeddingVisualizationParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input(ASK_VISUALIZATION_DIM))
+        new_value = read_int_parameter(ASK_VISUALIZATION_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -130,7 +131,7 @@ class EmbeddingVisualizationParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input(ASK_VISUALIZATION_DIM))
+        new_value = read_int_parameter(ASK_VISUALIZATION_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

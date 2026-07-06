@@ -9,6 +9,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class EmbeddingBiasAnalysisParameterRules:
     @Rule(
         SelectedLayer(
@@ -25,9 +26,9 @@ class EmbeddingBiasAnalysisParameterRules:
     def ask_embedding_bias_analysis_parameters(self, layer_index):
         print(EMBEDDING_BIAS_ANALYSIS_SELECTED)
 
-        target_word_count = int(input(ASK_TARGET_WORD_COUNT))
-        attribute_word_count = int(input(ASK_ATTRIBUTE_WORD_COUNT))
-        embedding_dim = int(input(ASK_EMBEDDING_DIM))
+        target_word_count = read_int_parameter(ASK_TARGET_WORD_COUNT)
+        attribute_word_count = read_int_parameter(ASK_ATTRIBUTE_WORD_COUNT)
+        embedding_dim = read_int_parameter(ASK_EMBEDDING_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -70,7 +71,7 @@ class EmbeddingBiasAnalysisParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input("Enter a corrected positive value: "))
+        new_value = read_int_parameter("Enter a corrected positive value: ")
 
         self.declare(LayerParameter(
             layer_index=layer_index,

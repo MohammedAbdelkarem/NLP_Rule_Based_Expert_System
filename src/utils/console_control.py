@@ -68,6 +68,23 @@ def controlled_input(prompt=""):
     return COMMAND_HANDLERS.get(command_key, keep_user_value)(raw_value)
 
 
+def read_text_parameter(prompt=""):
+    return controlled_input(prompt)
+
+
+def cast_integer_value(raw_value, prompt):
+    try:
+        return int(raw_value)
+    except ValueError:
+        print("Invalid integer value. Please enter a number, R, or E.")
+        return read_int_parameter(prompt)
+
+
+def read_int_parameter(prompt=""):
+    raw_value = controlled_input(prompt)
+    return cast_integer_value(raw_value, prompt)
+
+
 def install_console_controls():
     builtins.input = controlled_input
 
@@ -136,7 +153,7 @@ def ask_replacement_layer(engine, layer_index, previous_layer_index):
     print("Choose a replacement layer for the same position.")
     print()
     print(MAIN_MENU)
-    choice = controlled_input(ASK_GLOBAL_ROLLBACK_LAYER)
+    choice = read_text_parameter(ASK_GLOBAL_ROLLBACK_LAYER)
     engine.declare(MenuChoice(
         layer_index=layer_index,
         previous_layer_index=previous_layer_index,
@@ -152,11 +169,23 @@ def handle_global_rollback(engine):
     ask_replacement_layer(engine, layer_index, previous_layer_index)
 
 
-def run_controlled_engine(engine):
+def run_engine_action(engine):
+    engine.run()
+
+
+def rollback_then_run_action(engine):
+    handle_global_rollback(engine)
+    engine.run()
+
+
+def execute_with_global_controls(action, engine):
     try:
-        engine.run()
+        action(engine)
     except EndSessionSignal:
         declare_end_session(engine)
     except RollbackSignal:
-        handle_global_rollback(engine)
-        run_controlled_engine(engine)
+        execute_with_global_controls(rollback_then_run_action, engine)
+
+
+def run_controlled_engine(engine):
+    execute_with_global_controls(run_engine_action, engine)

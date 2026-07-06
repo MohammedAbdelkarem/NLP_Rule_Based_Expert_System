@@ -1,56 +1,60 @@
 MAIN_MENU = """
-Available layers:
-1. Input Encoding Layer Group: Token Embedding + Positional Embedding + Element-wise Summation
-2. LayerNorm
-3. Multi-Head Attention Layer Group
-4. Residual Connection Layer
-5. Feed-Forward Network Layer Group
+Available model components:
+
+Neural network layers and trainable model components:
+1. Input Encoding: Token Embedding + Positional Encoding + Summation (Component Group)
+2. Layer Normalization
+3. Multi-Head Self-Attention (Component Group)
+4. Residual Addition Layer
+5. Position-wise Feed-Forward Network (Component Group)
 6. ReLU Activation Layer
 7. GELU Activation Layer
-8. Position-wise Linear Layer
-9. Softmax Layer
+8. Position-wise Linear Projection Layer
+9. Softmax Probability Layer
 10. Tanh Activation Layer
-11. Hidden Dense + Activation Block
-12. Generic Feedforward MLP Block
-13. Feedforward Classifier Head
-14. Embedding-to-Classifier Mean Pooling Adapter
-15. Sigmoid Activation Layer
-16. Binary Logistic Regression Head
-17. Multinomial Logistic Regression Head
+11. Dense Projection + Activation (Component Group)
+12. Feedforward MLP (Component Group)
+13. Feedforward Classification Head
+14. Mean Pooling Adapter for Sequence Embeddings
+15. Sigmoid Probability Layer
+16. Binary Logistic Regression Head (Component Group)
+17. Multiclass Logistic Regression Head (Component Group)
 18. Binary Cross-Entropy Loss
 19. Categorical Cross-Entropy Loss
-20. L1/L2 Regularization Constraint
-21. Audio Input Layer
-22. Audio Framing + Windowing Layer
-23. STFT / Spectrum Extraction ComponentGroup
-24. Mel Filterbank ComponentGroup
-25. Log-Mel Spectrogram Layer
-26. MFCC ComponentGroup
-27. Delta + Delta-Delta Feature Augmentation ComponentGroup
-28. Speech Feature Normalization Layer
-29. Token Embedding Layer
+20. Weight Regularization Constraint
+38. Simple Recurrent Neural Network Layer
+39. Long Short-Term Memory Layer
+40. Stacked Recurrent Network (Component Group)
+41. Bidirectional Recurrent Network (Component Group)
+42. Recurrent Encoder-Decoder Sequence Model (Component Group)
+43. Recurrent Attention Component
+
+Feature extraction, representation, and analysis components:
+21. Raw Audio Input Specification
+22. Audio Framing and Windowing
+23. STFT Spectrum Feature Extraction (Component Group)
+24. Mel Filterbank Feature Extraction (Component Group)
+25. Log-Mel Spectrogram Feature Extraction
+26. MFCC Feature Extraction (Component Group)
+27. Delta and Delta-Delta Feature Augmentation (Component Group)
+28. Speech Feature Normalization
+29. Trainable Token Embedding Layer
 30. Pretrained Static Embedding Layer
-31. Word-Context Co-occurrence Matrix Component
-32. Count-Based Embedding Component
-33. Cosine Similarity Component
-34. Skip-Gram with Negative Sampling ComponentGroup
-35. Embedding Visualization Component
-36. Embedding Bias Analysis Component
-37. Embedding Evaluation Component
-38. Simple RNN Layer
-39. LSTM Layer
-40. Stacked RNN ComponentGroup
-41. Bidirectional RNN ComponentGroup
-42. RNN Encoder-Decoder ComponentGroup
-43. RNN Attention Component
+31. Word-Context Co-occurrence Matrix
+32. Count-Based Text Vector Representation
+33. Cosine Similarity for Embedding Vectors
+34. Skip-Gram Negative Sampling Embedding Trainer (Component Group)
+35. Embedding Space Visualization
+36. Embedding Bias Analysis
+37. Embedding Quality Evaluation
 """
 
-CHOOSE_FIRST_LAYER = "\nChoose the first layer number: "
-CHOOSE_NEXT_LAYER = "\nChoose the next layer number: "
-ASK_ROLLBACK_LAYER = "\nChoose another layer number for the same layer position, or 0 to end the session: "
+CHOOSE_FIRST_LAYER = "\nChoose the first component number: "
+CHOOSE_NEXT_LAYER = "\nChoose the next component number: "
+ASK_ROLLBACK_LAYER = "\nChoose another component number for the same position, or 0 to end the session: "
 
 INPUT_ENCODING_SELECTED = """
-You selected: Input Encoding Layer Group
+You selected: Input Encoding (Component Group)
 
 This is not one simple layer.
 It is a grouped Transformer input layer made of two internal layers working together:
@@ -78,10 +82,10 @@ ASK_POSITION_WISE_LINEAR_OUTPUT_DIM = "Enter output feature dimension: "
 ASK_SOFTMAX_VECTOR_DIM = "Enter logits vector dimension / number of scores: "
 
 LAYER_NORM_SELECTED = """
-You selected: LayerNorm Layer
+You selected: Layer Normalization
 
-Because LayerNorm is selected as the first layer, your input must already be an encoded float tensor.
-LayerNorm cannot be applied directly to raw integer token IDs.
+Because Layer Normalization is selected as the first component, your input must already be an encoded float tensor.
+Layer Normalization cannot be applied directly to raw integer token IDs.
 """
 
 ASK_LAYER_NORM_INPUT_KIND = """
@@ -92,7 +96,7 @@ Choose your input data kind:
 Your choice: """
 
 MULTI_HEAD_ATTENTION_SELECTED = """
-You selected: Multi-Head Attention Layer Group
+You selected: Multi-Head Self-Attention (Component Group)
 
 Because Multi-Head Attention is selected as the first layer, your input must already be an encoded float tensor.
 Multi-Head Attention cannot be applied directly to raw integer token IDs.
@@ -113,7 +117,7 @@ The two tensors must have the same shape and compatible data type.
 """
 
 FEED_FORWARD_SELECTED = """
-You selected: Feed-Forward Network Layer Group
+You selected: Position-wise Feed-Forward Network (Component Group)
 
 Because Feed-Forward Network is selected as the first layer, your input must already be an encoded float tensor.
 Feed-Forward Network cannot be applied directly to raw integer token IDs.
@@ -200,16 +204,15 @@ It preserves the input tensor shape and maps values to the range [-1, 1].
 """
 
 HIDDEN_DENSE_BLOCK_SELECTED = """
-You selected: Hidden Dense + Activation Block
+You selected: Dense Projection + Activation (Component Group)
 
-This is a Chapter 6 feedforward hidden block.
-It applies a trainable dense projection and then a non-linear activation.
+This feedforward hidden block applies a trainable dense projection followed by a non-linear activation.
 """
 
 FEEDFORWARD_MLP_BLOCK_SELECTED = """
-You selected: Generic Feedforward MLP Block
+You selected: Feedforward MLP (Component Group)
 
-This is a generic Chapter 6 feedforward network block.
+This feedforward network block applies a two-layer MLP transformation.
 It applies Linear -> Activation -> Linear.
 """
 
@@ -281,7 +284,7 @@ Your choice: """
 ASK_NUM_CLASSES = "Enter number of classes: "
 
 # -----------------------------------------------------------------------------
-# Restored prompts required by Chapter 4, Chapter 5, and speech modules.
+# Additional prompts for classification, embeddings, and speech features.
 # -----------------------------------------------------------------------------
 
 TOKEN_EMBEDDING_SELECTED = """
@@ -316,7 +319,7 @@ This component compares two embedding vectors without adding trainable weights.
 """
 
 SGNS_SELECTED = """
-You selected: Skip-Gram with Negative Sampling ComponentGroup
+You selected: Skip-Gram Negative Sampling Embedding Trainer (Component Group)
 
 This training component learns word embeddings from target-context pairs.
 """
@@ -392,15 +395,15 @@ Choose Sigmoid input shape rank:
 Your choice: """
 
 BINARY_LOGISTIC_REGRESSION_HEAD_SELECTED = """
-You selected: Binary Logistic Regression Head
+You selected: Binary Logistic Regression Head (Component Group)
 
-This ComponentGroup combines Linear logits projection and Sigmoid activation.
+This trainable head combines a linear logits projection and Sigmoid activation.
 """
 
 MULTINOMIAL_LOGISTIC_REGRESSION_HEAD_SELECTED = """
-You selected: Multinomial Logistic Regression Head
+You selected: Multiclass Logistic Regression Head (Component Group)
 
-This ComponentGroup combines Linear logits projection and Softmax activation.
+This trainable head combines a linear logits projection and Softmax activation.
 """
 
 BINARY_CROSS_ENTROPY_SELECTED = """
@@ -469,13 +472,13 @@ This layer slices audio into overlapping frames and applies a window function.
 """
 
 STFT_SPECTRUM_SELECTED = """
-You selected: STFT / Spectrum Extraction ComponentGroup
+You selected: STFT Spectrum Feature Extraction (Component Group)
 
 This component converts windowed frames to frequency-domain spectrum features.
 """
 
 MEL_FILTERBANK_SELECTED = """
-You selected: Mel Filterbank ComponentGroup
+You selected: Mel Filterbank Feature Extraction (Component Group)
 
 This component projects spectral bins onto the Mel scale.
 """
@@ -487,13 +490,13 @@ This layer applies log compression to Mel energies.
 """
 
 MFCC_SELECTED = """
-You selected: MFCC ComponentGroup
+You selected: MFCC Feature Extraction (Component Group)
 
 This component converts log-Mel features into cepstral coefficients using DCT.
 """
 
 DELTA_FEATURES_SELECTED = """
-You selected: Delta + Delta-Delta Feature Augmentation ComponentGroup
+You selected: Delta and Delta-Delta Feature Augmentation (Component Group)
 
 This component adds fixed temporal derivative streams to MFCC features.
 """
@@ -562,7 +565,7 @@ Your choice: """
 SIMPLE_RNN_SELECTED = """
 You selected: Simple RNN Layer
 
-This Chapter 13 layer processes a sequence one time step at a time.
+This recurrent layer processes a sequence one time step at a time.
 At each step it combines the current input vector with the previous hidden state.
 
 Input shape:  (batch_size, sequence_length, input_dim)
@@ -576,7 +579,7 @@ Enter the Simple RNN configuration:
 LSTM_SELECTED = """
 You selected: LSTM Layer
 
-This Chapter 13 recurrent layer extends the RNN with an internal cell state and
+This recurrent layer extends the RNN with an internal cell state and
 three main gates: forget gate, input/update gate, and output gate.
 
 Input shape:  (batch_size, sequence_length, input_dim)
@@ -588,9 +591,9 @@ Enter the LSTM configuration:
 """
 
 STACKED_RNN_SELECTED = """
-You selected: Stacked RNN ComponentGroup
+You selected: Stacked Recurrent Network (Component Group)
 
-This Chapter 13 recurrent architecture places multiple recurrent layers above each
+This recurrent architecture places multiple recurrent layers above each
 other. Each layer receives the sequence output from the layer below it.
 
 Input shape:  (batch_size, sequence_length, input_dim)
@@ -600,9 +603,9 @@ Enter the stacked recurrent configuration:
 """
 
 BIDIRECTIONAL_RNN_SELECTED = """
-You selected: Bidirectional RNN ComponentGroup
+You selected: Bidirectional Recurrent Network (Component Group)
 
-This Chapter 13 recurrent architecture uses two recurrent paths:
+This recurrent architecture uses two recurrent paths:
 1. Forward path reads left to right.
 2. Backward path reads right to left.
 
@@ -615,9 +618,9 @@ Enter the bidirectional recurrent configuration:
 """
 
 RNN_ENCODER_DECODER_SELECTED = """
-You selected: RNN Encoder-Decoder ComponentGroup
+You selected: Recurrent Encoder-Decoder Sequence Model (Component Group)
 
-This Chapter 13 sequence-to-sequence architecture uses an encoder recurrent model
+This sequence-to-sequence architecture uses an encoder recurrent model
 It uses an encoder recurrent model on the source sequence and a decoder recurrent model on the target sequence.
 
 Encoder input shape:  (batch_size, source_sequence_length, input_dim)
@@ -629,7 +632,7 @@ Enter the encoder-decoder configuration:
 RNN_ATTENTION_SELECTED = """
 You selected: RNN Attention Component
 
-This Chapter 13 component is used with encoder-decoder RNNs. It computes
+This attention component is used with encoder-decoder recurrent models. It computes
 attention weights over encoder states and builds context vectors for decoder states.
 
 Attention weights shape: (batch_size, target_sequence_length, source_sequence_length)
@@ -665,4 +668,4 @@ Your choice: """
 ASK_POSITIVE_INTEGER_VALUE = "Enter a positive integer value: "
 
 
-ASK_GLOBAL_ROLLBACK_LAYER = "Choose replacement layer after rollback: "
+ASK_GLOBAL_ROLLBACK_LAYER = "Choose replacement component after rollback: "

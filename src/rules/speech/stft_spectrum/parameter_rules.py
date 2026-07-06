@@ -8,6 +8,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class STFTSpectrumParameterRules:
     @Rule(
         SelectedLayer(
@@ -24,8 +25,8 @@ class STFTSpectrumParameterRules:
     def ask_stft_spectrum_parameters(self, layer_index):
         print(STFT_SPECTRUM_SELECTED)
 
-        n_fft = int(input(ASK_STFT_N_FFT))
-        output_mode_choice = input(ASK_STFT_OUTPUT_MODE)
+        n_fft = read_int_parameter(ASK_STFT_N_FFT)
+        output_mode_choice = read_text_parameter(ASK_STFT_OUTPUT_MODE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -128,7 +129,7 @@ class STFTSpectrumParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_STFT_OUTPUT_MODE)
+        new_choice = read_text_parameter(ASK_STFT_OUTPUT_MODE)
 
         self.declare(OptionSelection(
             layer_index=layer_index,

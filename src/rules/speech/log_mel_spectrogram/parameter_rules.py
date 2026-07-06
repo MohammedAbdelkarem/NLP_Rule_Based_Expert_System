@@ -8,6 +8,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class LogMelSpectrogramParameterRules:
     @Rule(
         SelectedLayer(
@@ -24,8 +25,8 @@ class LogMelSpectrogramParameterRules:
     def ask_log_mel_spectrogram_parameters(self, layer_index):
         print(LOG_MEL_SPECTROGRAM_SELECTED)
 
-        epsilon_power = int(input(ASK_LOG_MEL_EPSILON))
-        compression_mode_choice = input(ASK_LOG_MEL_COMPRESSION_MODE)
+        epsilon_power = read_int_parameter(ASK_LOG_MEL_EPSILON)
+        compression_mode_choice = read_text_parameter(ASK_LOG_MEL_COMPRESSION_MODE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -58,7 +59,7 @@ class LogMelSpectrogramParameterRules:
 
         self.retract(epsilon_power_fact)
 
-        new_epsilon_power = int(input(ASK_LOG_MEL_EPSILON))
+        new_epsilon_power = read_int_parameter(ASK_LOG_MEL_EPSILON)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -153,7 +154,7 @@ class LogMelSpectrogramParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_LOG_MEL_COMPRESSION_MODE)
+        new_choice = read_text_parameter(ASK_LOG_MEL_COMPRESSION_MODE)
 
         self.declare(OptionSelection(
             layer_index=layer_index,

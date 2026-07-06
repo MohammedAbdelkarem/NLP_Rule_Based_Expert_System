@@ -10,6 +10,7 @@ from src.facts import (
 from src.prompts import ASK_STFT_N_FFT
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class STFTSpectrumCompatibilityRules:
     @Rule(
         SelectedLayer(
@@ -175,7 +176,7 @@ class STFTSpectrumCompatibilityRules:
 
         self.retract(n_fft_fact)
 
-        new_n_fft = int(input(ASK_STFT_N_FFT))
+        new_n_fft = read_int_parameter(ASK_STFT_N_FFT)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

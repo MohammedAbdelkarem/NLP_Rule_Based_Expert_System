@@ -11,6 +11,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class AudioInputParameterRules:
     @Rule(
         SelectedLayer(
@@ -28,11 +29,11 @@ class AudioInputParameterRules:
     def ask_audio_input_parameters(self, layer_index):
         print(AUDIO_INPUT_SELECTED)
 
-        batch_size = int(input(ASK_AUDIO_BATCH_SIZE))
-        duration_seconds = int(input(ASK_AUDIO_DURATION_SECONDS))
-        sample_rate = int(input(ASK_AUDIO_SAMPLE_RATE))
-        channels = int(input(ASK_AUDIO_CHANNELS))
-        bit_depth = int(input(ASK_AUDIO_BIT_DEPTH))
+        batch_size = read_int_parameter(ASK_AUDIO_BATCH_SIZE)
+        duration_seconds = read_int_parameter(ASK_AUDIO_DURATION_SECONDS)
+        sample_rate = read_int_parameter(ASK_AUDIO_SAMPLE_RATE)
+        channels = read_int_parameter(ASK_AUDIO_CHANNELS)
+        bit_depth = read_int_parameter(ASK_AUDIO_BIT_DEPTH)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

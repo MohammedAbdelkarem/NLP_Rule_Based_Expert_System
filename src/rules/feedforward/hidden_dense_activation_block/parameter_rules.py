@@ -12,6 +12,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class HiddenDenseActivationBlockParameterRules:
     @Rule(
         SelectedLayer(
@@ -28,7 +29,7 @@ class HiddenDenseActivationBlockParameterRules:
     )
     def ask_first_hidden_dense_input_kind(self, layer_index):
         print(HIDDEN_DENSE_BLOCK_SELECTED)
-        choice = input(ASK_FEEDFORWARD_INPUT_KIND)
+        choice = read_text_parameter(ASK_FEEDFORWARD_INPUT_KIND)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="hidden_dense_activation_block",
@@ -122,7 +123,7 @@ class HiddenDenseActivationBlockParameterRules:
         print()
         print("Invalid input kind choice. Please choose 1, 2, or 3.")
         self.retract(option_fact)
-        new_choice = input(ASK_FEEDFORWARD_INPUT_KIND)
+        new_choice = read_text_parameter(ASK_FEEDFORWARD_INPUT_KIND)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="hidden_dense_activation_block",
@@ -153,10 +154,10 @@ class HiddenDenseActivationBlockParameterRules:
         salience=70,
     )
     def ask_first_hidden_dense_rank_2_parameters(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        input_dim = int(input(ASK_FEATURE_DIM))
-        hidden_dim = int(input(ASK_HIDDEN_DIM))
-        activation_choice = input(ASK_HIDDEN_BLOCK_ACTIVATION)
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        input_dim = read_int_parameter(ASK_FEATURE_DIM)
+        hidden_dim = read_int_parameter(ASK_HIDDEN_DIM)
+        activation_choice = read_text_parameter(ASK_HIDDEN_BLOCK_ACTIVATION)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="hidden_dense_activation_block",
@@ -205,11 +206,11 @@ class HiddenDenseActivationBlockParameterRules:
         salience=70,
     )
     def ask_first_hidden_dense_rank_3_parameters(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        input_dim = int(input(ASK_FEATURE_DIM))
-        hidden_dim = int(input(ASK_HIDDEN_DIM))
-        activation_choice = input(ASK_HIDDEN_BLOCK_ACTIVATION)
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        input_dim = read_int_parameter(ASK_FEATURE_DIM)
+        hidden_dim = read_int_parameter(ASK_HIDDEN_DIM)
+        activation_choice = read_text_parameter(ASK_HIDDEN_BLOCK_ACTIVATION)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="hidden_dense_activation_block",
@@ -262,8 +263,8 @@ class HiddenDenseActivationBlockParameterRules:
         salience=70,
     )
     def ask_hidden_dense_after_previous_parameters(self, layer_index):
-        hidden_dim = int(input(ASK_HIDDEN_DIM))
-        activation_choice = input(ASK_HIDDEN_BLOCK_ACTIVATION)
+        hidden_dim = read_int_parameter(ASK_HIDDEN_DIM)
+        activation_choice = read_text_parameter(ASK_HIDDEN_BLOCK_ACTIVATION)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="hidden_dense_activation_block",
@@ -340,7 +341,7 @@ class HiddenDenseActivationBlockParameterRules:
         print()
         print("Invalid activation choice. Please choose 1 or 2.")
         self.retract(option_fact)
-        new_choice = input(ASK_HIDDEN_BLOCK_ACTIVATION)
+        new_choice = read_text_parameter(ASK_HIDDEN_BLOCK_ACTIVATION)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="hidden_dense_activation_block",

@@ -12,6 +12,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class PretrainedStaticEmbeddingParameterRules:
     @Rule(
         SelectedLayer(
@@ -31,10 +32,10 @@ class PretrainedStaticEmbeddingParameterRules:
     def ask_pretrained_static_embedding_shape_parameters(self, layer_index):
         print(PRETRAINED_STATIC_EMBEDDING_SELECTED)
 
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        vocab_size = int(input(ASK_VOCAB_SIZE))
-        embedding_dim = int(input(ASK_EMBEDDING_DIM))
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        vocab_size = read_int_parameter(ASK_VOCAB_SIZE)
+        embedding_dim = read_int_parameter(ASK_EMBEDDING_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -86,7 +87,7 @@ class PretrainedStaticEmbeddingParameterRules:
         salience=75,
     )
     def ask_pretrained_embedding_source(self, layer_index, embedding_dim):
-        choice = input(ASK_PRETRAINED_EMBEDDING_SOURCE)
+        choice = read_text_parameter(ASK_PRETRAINED_EMBEDDING_SOURCE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="pretrained_static_embedding",
@@ -118,7 +119,7 @@ class PretrainedStaticEmbeddingParameterRules:
         salience=72,
     )
     def ask_pretrained_training_mode(self, layer_index):
-        choice = input(ASK_PRETRAINED_EMBEDDING_TRAINING_MODE)
+        choice = read_text_parameter(ASK_PRETRAINED_EMBEDDING_TRAINING_MODE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="pretrained_static_embedding",

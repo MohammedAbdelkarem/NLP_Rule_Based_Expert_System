@@ -7,6 +7,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class PretrainedStaticEmbeddingOptionResolutionRules:
     @Rule(
         AS.option_fact << OptionSelection(
@@ -114,7 +115,7 @@ class PretrainedStaticEmbeddingOptionResolutionRules:
     def ask_pretrained_source_again(self, option_fact, layer_index):
         print("Invalid pretrained embedding source. Please choose 1, 2, 3, or 4.")
         self.retract(option_fact)
-        choice = input(ASK_PRETRAINED_EMBEDDING_SOURCE)
+        choice = read_text_parameter(ASK_PRETRAINED_EMBEDDING_SOURCE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="pretrained_static_embedding",
@@ -184,7 +185,7 @@ class PretrainedStaticEmbeddingOptionResolutionRules:
     def ask_pretrained_training_mode_again(self, option_fact, layer_index):
         print("Invalid training mode. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_PRETRAINED_EMBEDDING_TRAINING_MODE)
+        choice = read_text_parameter(ASK_PRETRAINED_EMBEDDING_TRAINING_MODE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="pretrained_static_embedding",

@@ -10,6 +10,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class MFCCParameterRules:
     @Rule(
         SelectedLayer(
@@ -26,10 +27,10 @@ class MFCCParameterRules:
     def ask_mfcc_parameters(self, layer_index):
         print(MFCC_SELECTED)
 
-        num_mfcc_coefficients = int(input(ASK_NUM_MFCC_COEFFICIENTS))
-        dct_type_choice = input(ASK_MFCC_DCT_TYPE)
-        include_c0_choice = input(ASK_MFCC_INCLUDE_C0)
-        lifter = int(input(ASK_MFCC_LIFTER))
+        num_mfcc_coefficients = read_int_parameter(ASK_NUM_MFCC_COEFFICIENTS)
+        dct_type_choice = read_text_parameter(ASK_MFCC_DCT_TYPE)
+        include_c0_choice = read_text_parameter(ASK_MFCC_INCLUDE_C0)
+        lifter = read_int_parameter(ASK_MFCC_LIFTER)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -81,7 +82,7 @@ class MFCCParameterRules:
 
         self.retract(num_mfcc_fact)
 
-        new_num_mfcc_coefficients = int(input(ASK_NUM_MFCC_COEFFICIENTS))
+        new_num_mfcc_coefficients = read_int_parameter(ASK_NUM_MFCC_COEFFICIENTS)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -106,7 +107,7 @@ class MFCCParameterRules:
 
         self.retract(lifter_fact)
 
-        new_lifter = int(input(ASK_MFCC_LIFTER))
+        new_lifter = read_int_parameter(ASK_MFCC_LIFTER)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -178,7 +179,7 @@ class MFCCParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_MFCC_DCT_TYPE)
+        new_choice = read_text_parameter(ASK_MFCC_DCT_TYPE)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -252,7 +253,7 @@ class MFCCParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_MFCC_INCLUDE_C0)
+        new_choice = read_text_parameter(ASK_MFCC_INCLUDE_C0)
 
         self.declare(OptionSelection(
             layer_index=layer_index,

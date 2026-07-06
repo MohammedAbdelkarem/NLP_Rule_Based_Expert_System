@@ -10,6 +10,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class InputEncodingParameterRules:
     @Rule(
         SelectedLayer(
@@ -27,10 +28,10 @@ class InputEncodingParameterRules:
     def ask_input_encoding_parameters(self, layer_index):
         print(INPUT_ENCODING_SELECTED)
 
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        vocab_size = int(input(ASK_VOCAB_SIZE))
-        model_dim = int(input(ASK_MODEL_DIM))
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        vocab_size = read_int_parameter(ASK_VOCAB_SIZE)
+        model_dim = read_int_parameter(ASK_MODEL_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

@@ -11,6 +11,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class MultinomialLogisticRegressionHeadParameterRules:
     @Rule(
         SelectedLayer(
@@ -29,7 +30,7 @@ class MultinomialLogisticRegressionHeadParameterRules:
     )
     def ask_first_multinomial_head_input_rank(self, layer_index):
         print(MULTINOMIAL_LOGISTIC_REGRESSION_HEAD_SELECTED)
-        choice = input(ASK_MULTICLASS_CLASSIFIER_INPUT_RANK)
+        choice = read_text_parameter(ASK_MULTICLASS_CLASSIFIER_INPUT_RANK)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -104,7 +105,7 @@ class MultinomialLogisticRegressionHeadParameterRules:
     def ask_multinomial_head_rank_again(self, option_fact, layer_index):
         print("Invalid classifier input rank. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_MULTICLASS_CLASSIFIER_INPUT_RANK)
+        choice = read_text_parameter(ASK_MULTICLASS_CLASSIFIER_INPUT_RANK)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -139,7 +140,7 @@ class MultinomialLogisticRegressionHeadParameterRules:
         salience=72
     )
     def ask_multinomial_head_batch_size(self, layer_index, rank_value):
-        value = int(input(ASK_BATCH_SIZE))
+        value = read_int_parameter(ASK_BATCH_SIZE)
         self.declare(
             LayerParameter(
                 layer_index=layer_index,
@@ -172,7 +173,7 @@ class MultinomialLogisticRegressionHeadParameterRules:
         salience=71
     )
     def ask_multinomial_head_sequence_length(self, layer_index):
-        value = int(input(ASK_SEQUENCE_LENGTH))
+        value = read_int_parameter(ASK_SEQUENCE_LENGTH)
         self.declare(
             LayerParameter(
                 layer_index=layer_index,
@@ -205,7 +206,7 @@ class MultinomialLogisticRegressionHeadParameterRules:
         salience=70
     )
     def ask_multinomial_head_input_dim(self, layer_index, rank_value):
-        value = int(input(ASK_INPUT_DIM))
+        value = read_int_parameter(ASK_INPUT_DIM)
         self.declare(
             LayerParameter(
                 layer_index=layer_index,
@@ -230,7 +231,7 @@ class MultinomialLogisticRegressionHeadParameterRules:
         salience=69
     )
     def ask_multinomial_head_num_classes(self, layer_index):
-        value = int(input(ASK_MULTICLASS_CLASS_COUNT))
+        value = read_int_parameter(ASK_MULTICLASS_CLASS_COUNT)
         self.declare(
             LayerParameter(
                 layer_index=layer_index,

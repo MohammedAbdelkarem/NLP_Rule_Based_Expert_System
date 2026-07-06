@@ -8,6 +8,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class CategoricalCrossEntropyParameterRules:
     @Rule(
         SelectedLayer(layer_index=MATCH.layer_index, layer_name="categorical_cross_entropy"),
@@ -22,7 +23,7 @@ class CategoricalCrossEntropyParameterRules:
     )
     def ask_cce_label_format(self, layer_index):
         print(CATEGORICAL_CROSS_ENTROPY_SELECTED)
-        choice = input(ASK_CCE_LABEL_FORMAT)
+        choice = read_text_parameter(ASK_CCE_LABEL_FORMAT)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -98,7 +99,7 @@ class CategoricalCrossEntropyParameterRules:
     def ask_cce_label_format_again(self, option_fact, layer_index):
         print("Invalid label format. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_CCE_LABEL_FORMAT)
+        choice = read_text_parameter(ASK_CCE_LABEL_FORMAT)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -128,7 +129,7 @@ class CategoricalCrossEntropyParameterRules:
         salience=73
     )
     def ask_cce_reduction(self, layer_index):
-        choice = input(ASK_LOSS_REDUCTION)
+        choice = read_text_parameter(ASK_LOSS_REDUCTION)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -204,7 +205,7 @@ class CategoricalCrossEntropyParameterRules:
     def ask_cce_reduction_again(self, option_fact, layer_index):
         print("Invalid reduction choice. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_LOSS_REDUCTION)
+        choice = read_text_parameter(ASK_LOSS_REDUCTION)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,

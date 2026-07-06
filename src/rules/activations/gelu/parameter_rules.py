@@ -10,6 +10,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class GELUParameterRules:
     @Rule(
         SelectedLayer(
@@ -27,7 +28,7 @@ class GELUParameterRules:
     def ask_first_gelu_input_kind(self, layer_index):
         print(ACTIVATION_SELECTED)
 
-        choice = input(ASK_ACTIVATION_INPUT_KIND)
+        choice = read_text_parameter(ASK_ACTIVATION_INPUT_KIND)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -116,7 +117,7 @@ class GELUParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_ACTIVATION_INPUT_KIND)
+        new_choice = read_text_parameter(ASK_ACTIVATION_INPUT_KIND)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -148,9 +149,9 @@ class GELUParameterRules:
         salience=70
     )
     def ask_first_gelu_parameters(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        model_dim = int(input(ASK_MODEL_DIM))
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        model_dim = read_int_parameter(ASK_MODEL_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

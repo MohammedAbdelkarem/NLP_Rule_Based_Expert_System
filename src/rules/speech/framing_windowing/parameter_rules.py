@@ -9,6 +9,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class FramingWindowingParameterRules:
     @Rule(
         SelectedLayer(
@@ -25,9 +26,9 @@ class FramingWindowingParameterRules:
     def ask_framing_windowing_parameters(self, layer_index):
         print(FRAMING_WINDOWING_SELECTED)
 
-        frame_length_ms = int(input(ASK_FRAME_LENGTH_MS))
-        hop_length_ms = int(input(ASK_HOP_LENGTH_MS))
-        window_choice = input(ASK_WINDOW_FUNCTION)
+        frame_length_ms = read_int_parameter(ASK_FRAME_LENGTH_MS)
+        hop_length_ms = read_int_parameter(ASK_HOP_LENGTH_MS)
+        window_choice = read_text_parameter(ASK_WINDOW_FUNCTION)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -136,7 +137,7 @@ class FramingWindowingParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_WINDOW_FUNCTION)
+        new_choice = read_text_parameter(ASK_WINDOW_FUNCTION)
 
         self.declare(OptionSelection(
             layer_index=layer_index,

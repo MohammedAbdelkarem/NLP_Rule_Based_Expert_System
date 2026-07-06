@@ -11,6 +11,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class LSTMParameterRules:
     @Rule(
         SelectedLayer(
@@ -27,11 +28,11 @@ class LSTMParameterRules:
     )
     def ask_first_lstm_parameters(self, layer_index):
         print(LSTM_SELECTED)
-        return_choice = input(ASK_RECURRENT_RETURN_MODE)
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        input_dim = int(input(ASK_INPUT_DIM))
-        hidden_size = int(input(ASK_HIDDEN_SIZE))
+        return_choice = read_text_parameter(ASK_RECURRENT_RETURN_MODE)
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        input_dim = read_int_parameter(ASK_INPUT_DIM)
+        hidden_size = read_int_parameter(ASK_HIDDEN_SIZE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="lstm",
@@ -85,8 +86,8 @@ class LSTMParameterRules:
     )
     def ask_next_lstm_parameters(self, layer_index):
         print(LSTM_SELECTED)
-        return_choice = input(ASK_RECURRENT_RETURN_MODE)
-        hidden_size = int(input(ASK_HIDDEN_SIZE))
+        return_choice = read_text_parameter(ASK_RECURRENT_RETURN_MODE)
+        hidden_size = read_int_parameter(ASK_HIDDEN_SIZE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name="lstm",

@@ -10,6 +10,7 @@ from src.facts import (
 from src.prompts import ASK_NUM_MFCC_COEFFICIENTS
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class MFCCCompatibilityRules:
     @Rule(
         SelectedLayer(
@@ -178,7 +179,7 @@ class MFCCCompatibilityRules:
 
         self.retract(num_mfcc_fact)
 
-        new_num_mfcc_coefficients = int(input(ASK_NUM_MFCC_COEFFICIENTS))
+        new_num_mfcc_coefficients = read_int_parameter(ASK_NUM_MFCC_COEFFICIENTS)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

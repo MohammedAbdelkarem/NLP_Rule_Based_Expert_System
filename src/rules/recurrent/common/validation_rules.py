@@ -4,6 +4,7 @@ from src.facts import LayerParameter
 from src.prompts import ASK_POSITIVE_INTEGER_VALUE
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class RecurrentParameterValidationRules:
     @Rule(
         AS.parameter_fact << LayerParameter(
@@ -33,7 +34,7 @@ class RecurrentParameterValidationRules:
         print()
         print(f"Invalid value for {parameter_name}. It must be greater than 0.")
         self.retract(parameter_fact)
-        new_value = int(input(ASK_POSITIVE_INTEGER_VALUE))
+        new_value = read_int_parameter(ASK_POSITIVE_INTEGER_VALUE)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name=layer_name,

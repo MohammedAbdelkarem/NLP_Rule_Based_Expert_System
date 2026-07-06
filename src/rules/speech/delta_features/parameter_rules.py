@@ -4,6 +4,7 @@ from src.facts import SelectedLayer, LayerParameter
 from src.prompts import DELTA_FEATURES_SELECTED, ASK_DELTA_WINDOW
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class DeltaFeatureParameterRules:
     @Rule(
         SelectedLayer(
@@ -20,7 +21,7 @@ class DeltaFeatureParameterRules:
     def ask_delta_feature_parameters(self, layer_index):
         print(DELTA_FEATURES_SELECTED)
 
-        delta_window = int(input(ASK_DELTA_WINDOW))
+        delta_window = read_int_parameter(ASK_DELTA_WINDOW)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="delta_features",
@@ -48,7 +49,7 @@ class DeltaFeatureParameterRules:
         print("Invalid delta window. It must be greater than 0.")
 
         self.retract(delta_window_fact)
-        new_delta_window = int(input(ASK_DELTA_WINDOW))
+        new_delta_window = read_int_parameter(ASK_DELTA_WINDOW)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

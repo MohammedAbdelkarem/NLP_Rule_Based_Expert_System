@@ -10,6 +10,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class SoftmaxParameterRules:
     @Rule(
         SelectedLayer(
@@ -27,7 +28,7 @@ class SoftmaxParameterRules:
     def ask_first_softmax_input_kind(self, layer_index):
         print(SOFTMAX_SELECTED)
 
-        choice = input(ASK_SOFTMAX_INPUT_KIND)
+        choice = read_text_parameter(ASK_SOFTMAX_INPUT_KIND)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -172,7 +173,7 @@ class SoftmaxParameterRules:
 
         self.retract(option_fact)
 
-        new_choice = input(ASK_SOFTMAX_INPUT_KIND)
+        new_choice = read_text_parameter(ASK_SOFTMAX_INPUT_KIND)
 
         self.declare(OptionSelection(
             layer_index=layer_index,
@@ -204,9 +205,9 @@ class SoftmaxParameterRules:
         salience=70
     )
     def ask_first_softmax_logits_tensor_shape(self, layer_index):
-        batch_size = int(input(ASK_BATCH_SIZE))
-        sequence_length = int(input(ASK_SEQUENCE_LENGTH))
-        vector_dim = int(input(ASK_SOFTMAX_VECTOR_DIM))
+        batch_size = read_int_parameter(ASK_BATCH_SIZE)
+        sequence_length = read_int_parameter(ASK_SEQUENCE_LENGTH)
+        vector_dim = read_int_parameter(ASK_SOFTMAX_VECTOR_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -250,7 +251,7 @@ class SoftmaxParameterRules:
 
         self.retract(vector_dim_fact)
 
-        new_vector_dim = int(input(ASK_SOFTMAX_VECTOR_DIM))
+        new_vector_dim = read_int_parameter(ASK_SOFTMAX_VECTOR_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

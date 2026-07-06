@@ -4,6 +4,7 @@ from src.facts import OptionSelection
 from src.prompts import ASK_RECURRENT_RETURN_MODE, ASK_RECURRENT_UNIT_TYPE
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class RecurrentOptionResolutionRules:
     @Rule(
         AS.option_fact << OptionSelection(
@@ -98,7 +99,7 @@ class RecurrentOptionResolutionRules:
     ):
         print("Invalid return mode. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_RECURRENT_RETURN_MODE)
+        choice = read_text_parameter(ASK_RECURRENT_RETURN_MODE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name=layer_name,
@@ -195,7 +196,7 @@ class RecurrentOptionResolutionRules:
     ):
         print("Invalid recurrent unit type. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_RECURRENT_UNIT_TYPE)
+        choice = read_text_parameter(ASK_RECURRENT_UNIT_TYPE)
         self.declare(OptionSelection(
             layer_index=layer_index,
             layer_name=layer_name,

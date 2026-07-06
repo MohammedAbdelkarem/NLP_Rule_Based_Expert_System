@@ -4,6 +4,7 @@ from src.facts import OutputStatus, ContinueChoice, MenuChoice, SessionStatus, L
 from src.prompts import MAIN_MENU, CONTINUE_MENU, CHOOSE_CONTINUE, CHOOSE_NEXT_LAYER
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class ContinueRules:
 
     @Rule(
@@ -38,7 +39,7 @@ class ContinueRules:
     def ask_continue_after_layer(self, completed_layer_index):
         print(CONTINUE_MENU)
 
-        choice = input(CHOOSE_CONTINUE)
+        choice = read_text_parameter(CHOOSE_CONTINUE)
 
         self.declare(ContinueChoice(
             after_layer_index=completed_layer_index,
@@ -64,7 +65,7 @@ class ContinueRules:
 
         print(MAIN_MENU)
 
-        choice = input(CHOOSE_NEXT_LAYER)
+        choice = read_text_parameter(CHOOSE_NEXT_LAYER)
 
         self.declare(MenuChoice(
             layer_index=next_layer_index,
@@ -114,7 +115,7 @@ class ContinueRules:
 
         self.retract(continue_choice_fact)
 
-        new_choice = input(CHOOSE_CONTINUE)
+        new_choice = read_text_parameter(CHOOSE_CONTINUE)
 
         self.declare(ContinueChoice(
             after_layer_index=completed_layer_index,

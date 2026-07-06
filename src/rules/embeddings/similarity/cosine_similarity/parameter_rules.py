@@ -4,6 +4,7 @@ from src.facts import SelectedLayer, LayerParameter
 from src.prompts import COSINE_SIMILARITY_SELECTED, ASK_VECTOR_DIM
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class CosineSimilarityParameterRules:
     @Rule(
         SelectedLayer(
@@ -20,7 +21,7 @@ class CosineSimilarityParameterRules:
     def ask_cosine_similarity_parameters(self, layer_index):
         print(COSINE_SIMILARITY_SELECTED)
 
-        vector_dim = int(input(ASK_VECTOR_DIM))
+        vector_dim = read_int_parameter(ASK_VECTOR_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -45,7 +46,7 @@ class CosineSimilarityParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input(ASK_VECTOR_DIM))
+        new_value = read_int_parameter(ASK_VECTOR_DIM)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

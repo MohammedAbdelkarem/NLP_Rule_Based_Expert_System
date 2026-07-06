@@ -4,6 +4,7 @@ from src.facts import MenuChoice, SelectedLayer, RollbackRequest
 from src.prompts import MAIN_MENU, ASK_ROLLBACK_LAYER
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class RollbackRules:
     @Rule(
         AS.rollback_fact << RollbackRequest(
@@ -49,7 +50,7 @@ class RollbackRules:
 
         print(MAIN_MENU)
 
-        choice = input(ASK_ROLLBACK_LAYER)
+        choice = read_text_parameter(ASK_ROLLBACK_LAYER)
 
         self.declare(MenuChoice(
             layer_index=layer_index,

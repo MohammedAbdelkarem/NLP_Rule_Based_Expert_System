@@ -9,6 +9,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class CountBasedEmbeddingParameterRules:
     @Rule(
         SelectedLayer(
@@ -25,9 +26,9 @@ class CountBasedEmbeddingParameterRules:
     def ask_count_based_embedding_parameters(self, layer_index):
         print(COUNT_BASED_EMBEDDING_SELECTED)
 
-        vocab_size = int(input(ASK_WORD_VOCAB_SIZE))
-        context_vocab_size = int(input(ASK_CONTEXT_VOCAB_SIZE))
-        context_window_size = int(input(ASK_CONTEXT_WINDOW_SIZE))
+        vocab_size = read_int_parameter(ASK_WORD_VOCAB_SIZE)
+        context_vocab_size = read_int_parameter(ASK_CONTEXT_VOCAB_SIZE)
+        context_window_size = read_int_parameter(ASK_CONTEXT_WINDOW_SIZE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -64,7 +65,7 @@ class CountBasedEmbeddingParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input(ASK_WORD_VOCAB_SIZE))
+        new_value = read_int_parameter(ASK_WORD_VOCAB_SIZE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -94,7 +95,7 @@ class CountBasedEmbeddingParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input(ASK_CONTEXT_VOCAB_SIZE))
+        new_value = read_int_parameter(ASK_CONTEXT_VOCAB_SIZE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -124,7 +125,7 @@ class CountBasedEmbeddingParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input(ASK_CONTEXT_WINDOW_SIZE))
+        new_value = read_int_parameter(ASK_CONTEXT_WINDOW_SIZE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

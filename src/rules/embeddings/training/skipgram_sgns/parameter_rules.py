@@ -11,6 +11,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class SkipGramSGNSParameterRules:
     @Rule(
         SelectedLayer(
@@ -27,11 +28,11 @@ class SkipGramSGNSParameterRules:
     def ask_skipgram_sgns_parameters(self, layer_index):
         print(SGNS_SELECTED)
 
-        target_vocab_size = int(input(ASK_TARGET_VOCAB_SIZE))
-        context_vocab_size = int(input(ASK_CONTEXT_VOCAB_SIZE))
-        embedding_dim = int(input(ASK_EMBEDDING_DIM))
-        context_window_size = int(input(ASK_CONTEXT_WINDOW_SIZE))
-        negative_sample_count = int(input(ASK_NEGATIVE_SAMPLE_COUNT))
+        target_vocab_size = read_int_parameter(ASK_TARGET_VOCAB_SIZE)
+        context_vocab_size = read_int_parameter(ASK_CONTEXT_VOCAB_SIZE)
+        embedding_dim = read_int_parameter(ASK_EMBEDDING_DIM)
+        context_window_size = read_int_parameter(ASK_CONTEXT_WINDOW_SIZE)
+        negative_sample_count = read_int_parameter(ASK_NEGATIVE_SAMPLE_COUNT)
 
         self.declare(LayerParameter(
             layer_index=layer_index,
@@ -86,7 +87,7 @@ class SkipGramSGNSParameterRules:
 
         self.retract(parameter_fact)
 
-        new_value = int(input("Enter a corrected positive value: "))
+        new_value = read_int_parameter("Enter a corrected positive value: ")
 
         self.declare(LayerParameter(
             layer_index=layer_index,

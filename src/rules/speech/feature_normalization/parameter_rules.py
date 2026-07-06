@@ -4,6 +4,7 @@ from src.facts import SelectedLayer, LayerParameter
 from src.prompts import FEATURE_NORMALIZATION_SELECTED, ASK_FEATURE_NORMALIZATION_MODE
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class FeatureNormalizationParameterRules:
     @Rule(
         SelectedLayer(
@@ -20,7 +21,7 @@ class FeatureNormalizationParameterRules:
     def ask_feature_normalization_parameters(self, layer_index):
         print(FEATURE_NORMALIZATION_SELECTED)
 
-        normalization_mode = int(input(ASK_FEATURE_NORMALIZATION_MODE))
+        normalization_mode = read_int_parameter(ASK_FEATURE_NORMALIZATION_MODE)
         self.declare(LayerParameter(
             layer_index=layer_index,
             layer_name="feature_normalization",
@@ -48,7 +49,7 @@ class FeatureNormalizationParameterRules:
         print("Invalid normalization mode. Choose 1 or 2.")
 
         self.retract(mode_fact)
-        new_mode = int(input(ASK_FEATURE_NORMALIZATION_MODE))
+        new_mode = read_int_parameter(ASK_FEATURE_NORMALIZATION_MODE)
 
         self.declare(LayerParameter(
             layer_index=layer_index,

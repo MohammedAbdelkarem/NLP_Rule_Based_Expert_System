@@ -4,6 +4,7 @@ from src.facts import OptionSelection
 from src.prompts import ASK_ATTENTION_SCORING_TYPE
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class RNNAttentionOptionResolutionRules:
     @Rule(
         AS.option_fact << OptionSelection(layer_index=MATCH.layer_index, layer_name="rnn_attention", question_key="attention_scoring_type", choice="1", value="unknown", status="raw"),
@@ -30,5 +31,5 @@ class RNNAttentionOptionResolutionRules:
     def ask_attention_scoring_again(self, option_fact, layer_index):
         print("Invalid attention scoring type. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_ATTENTION_SCORING_TYPE)
+        choice = read_text_parameter(ASK_ATTENTION_SCORING_TYPE)
         self.declare(OptionSelection(layer_index=layer_index, layer_name="rnn_attention", question_key="attention_scoring_type", choice=choice, value="unknown", status="raw"))

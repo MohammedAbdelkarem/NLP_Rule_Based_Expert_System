@@ -8,6 +8,7 @@ from src.prompts import (
 )
 
 
+from src.utils.console_control import read_int_parameter, read_text_parameter
 class L1L2RegularizationParameterRules:
     @Rule(
         SelectedLayer(layer_index=MATCH.layer_index, layer_name="l1_l2_regularization"),
@@ -22,7 +23,7 @@ class L1L2RegularizationParameterRules:
     )
     def ask_regularization_type(self, layer_index):
         print(REGULARIZATION_SELECTED)
-        choice = input(ASK_REGULARIZATION_TYPE)
+        choice = read_text_parameter(ASK_REGULARIZATION_TYPE)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -98,7 +99,7 @@ class L1L2RegularizationParameterRules:
     def ask_regularization_type_again(self, option_fact, layer_index):
         print("Invalid regularization choice. Please choose 1 or 2.")
         self.retract(option_fact)
-        choice = input(ASK_REGULARIZATION_TYPE)
+        choice = read_text_parameter(ASK_REGULARIZATION_TYPE)
         self.declare(
             OptionSelection(
                 layer_index=layer_index,
@@ -128,7 +129,7 @@ class L1L2RegularizationParameterRules:
         salience=72
     )
     def ask_regularization_lambda_exponent(self, layer_index):
-        value = int(input(ASK_REGULARIZATION_LAMBDA_EXPONENT))
+        value = read_int_parameter(ASK_REGULARIZATION_LAMBDA_EXPONENT)
         self.declare(
             LayerParameter(
                 layer_index=layer_index,
