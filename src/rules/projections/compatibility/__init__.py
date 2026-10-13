@@ -1,1 +1,0 @@
-from src.rules.projections.compatibility.linear import LinearProjectionCompatibilityRules

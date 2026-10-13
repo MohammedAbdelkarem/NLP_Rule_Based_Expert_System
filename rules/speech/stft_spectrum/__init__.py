@@ -1,0 +1,3 @@
+from rules.speech.stft_spectrum.parameter_rules import STFTSpectrumParameterRules
+from rules.speech.stft_spectrum.calculation_rules import STFTSpectrumCalculationRules
+from rules.speech.stft_spectrum.output_rules import STFTSpectrumOutputRules

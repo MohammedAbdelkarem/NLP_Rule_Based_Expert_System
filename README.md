@@ -61,19 +61,19 @@ Position-wise Linear Layer with output score projection
 - `OutputStatus` prevents duplicate output actions.
 - `TensorShape` and `TensorDataType` were merged into `TensorInfo`.
 - `IntermediateTensor` is used only for grouped or complex layers.
-- Transformer-specific rules are under `src/rules/transformers/`.
-- Speech-specific rules are under `src/rules/speech/`.
-- Printing helpers were split by module under `src/utils/printing/`; `src/utils/print_helpers.py` remains as a compatibility facade.
-- ReLU, GELU, and Softmax are normal selectable activation layers under `src/rules/activations/`.
+- Transformer-specific rules are under `rules/transformers/`.
+- Speech-specific rules are under `rules/speech/`.
+- Printing helpers were split by module under `utils/printing/`; `utils/print_helpers.py` remains as a compatibility facade.
+- ReLU, GELU, and Softmax are normal selectable activation layers under `rules/activations/`.
 - Feed-Forward Network is a grouped Transformer layer and asks the user whether to use ReLU or GELU internally.
-- Position-wise Linear is a standalone projection layer under `src/rules/projections/`.
+- Position-wise Linear is a standalone projection layer under `rules/projections/`.
 - Position-wise Linear can output either hidden tensors or logits depending on its purpose.
 - Softmax is stored as an activation layer and remains terminal because it outputs probabilities.
 
 ## Structure
 
 ```text
-src/
+
 ├── facts/
 ├── rules/
 │   ├── common/

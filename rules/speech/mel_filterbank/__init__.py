@@ -1,0 +1,3 @@
+from rules.speech.mel_filterbank.parameter_rules import MelFilterbankParameterRules
+from rules.speech.mel_filterbank.calculation_rules import MelFilterbankCalculationRules
+from rules.speech.mel_filterbank.output_rules import MelFilterbankOutputRules

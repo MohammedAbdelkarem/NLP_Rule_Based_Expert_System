@@ -1,0 +1,4 @@
+from rules.recurrent.lstm.parameter_rules import LSTMParameterRules
+from rules.recurrent.lstm.first_calculation_rules import LSTMFirstCalculationRules
+from rules.recurrent.lstm.previous_calculation_rules import LSTMPreviousCalculationRules
+from rules.recurrent.lstm.output_rules import LSTMOutputRules

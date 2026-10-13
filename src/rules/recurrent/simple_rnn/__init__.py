@@ -1,4 +1,0 @@
-from src.rules.recurrent.simple_rnn.parameter_rules import SimpleRNNParameterRules
-from src.rules.recurrent.simple_rnn.first_calculation_rules import SimpleRNNFirstCalculationRules
-from src.rules.recurrent.simple_rnn.previous_calculation_rules import SimpleRNNPreviousCalculationRules
-from src.rules.recurrent.simple_rnn.output_rules import SimpleRNNOutputRules

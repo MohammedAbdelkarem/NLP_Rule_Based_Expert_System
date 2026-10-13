@@ -1,0 +1,3 @@
+from rules.speech.audio_input.parameter_rules import AudioInputParameterRules
+from rules.speech.audio_input.calculation_rules import AudioInputCalculationRules
+from rules.speech.audio_input.output_rules import AudioInputOutputRules

@@ -1,0 +1,1 @@
+from rules.recurrent.compatibility.recurrent_sequence import RecurrentInputCompatibilityRules

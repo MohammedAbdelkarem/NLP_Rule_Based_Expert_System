@@ -1,0 +1,80 @@
+from experta import Rule, MATCH, NOT
+
+from facts import ComponentGroup, OutputStatus, TensorInfo, WeightShape
+from utils.printing import print_embedding_bias_analysis_result
+
+
+class EmbeddingBiasAnalysisOutputRules:
+    @Rule(
+        ComponentGroup(
+            group_index=MATCH.layer_index,
+            group_name="embedding_bias_analysis",
+            group_title=MATCH.layer_title,
+            internal_layers=MATCH.internal_layers,
+            combine_operation=MATCH.combine_operation,
+            input_shape=MATCH.input_shape,
+            output_shape=MATCH.output_shape,
+            status="computed"
+        ),
+        TensorInfo(
+            layer_index=MATCH.layer_index,
+            layer_name="embedding_bias_analysis",
+            tensor_name="target_word_count",
+            shape=MATCH.target_word_count
+        ),
+        TensorInfo(
+            layer_index=MATCH.layer_index,
+            layer_name="embedding_bias_analysis",
+            tensor_name="attribute_word_count",
+            shape=MATCH.attribute_word_count
+        ),
+        TensorInfo(
+            layer_index=MATCH.layer_index,
+            layer_name="embedding_bias_analysis",
+            tensor_name="embedding_dim",
+            shape=MATCH.embedding_dim
+        ),
+        WeightShape(
+            layer_index=MATCH.layer_index,
+            layer_name="embedding_bias_analysis",
+            weight_name="analysis_parameters",
+            shape=MATCH.parameter_shape
+        ),
+        NOT(OutputStatus(
+            layer_index=MATCH.layer_index,
+            output_name="layer_result_printed",
+            status="printed"
+        )),
+        salience=50
+    )
+    def print_embedding_bias_analysis_component_result(
+        self,
+        layer_index,
+        layer_title,
+        internal_layers,
+        combine_operation,
+        input_shape,
+        output_shape,
+        target_word_count,
+        attribute_word_count,
+        embedding_dim,
+        parameter_shape
+    ):
+        print_embedding_bias_analysis_result(
+            layer_index=layer_index,
+            layer_title=layer_title,
+            input_shape=input_shape,
+            output_shape=output_shape,
+            parameter_shape=parameter_shape,
+            internal_layers=internal_layers,
+            combine_operation=combine_operation,
+            target_word_count=int(target_word_count),
+            attribute_word_count=int(attribute_word_count),
+            embedding_dim=int(embedding_dim)
+        )
+
+        self.declare(OutputStatus(
+            layer_index=layer_index,
+            output_name="layer_result_printed",
+            status="printed"
+        ))

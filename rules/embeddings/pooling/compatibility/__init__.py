@@ -1,0 +1,1 @@
+from rules.embeddings.pooling.compatibility.pooling import EmbeddingPoolingCompatibilityRules

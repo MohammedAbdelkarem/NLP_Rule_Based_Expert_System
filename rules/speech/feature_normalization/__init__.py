@@ -1,0 +1,3 @@
+from rules.speech.feature_normalization.parameter_rules import FeatureNormalizationParameterRules
+from rules.speech.feature_normalization.calculation_rules import FeatureNormalizationCalculationRules
+from rules.speech.feature_normalization.output_rules import FeatureNormalizationOutputRules

@@ -1,0 +1,4 @@
+from rules.transformers.compatibility.input_order_rules import InputOrderCompatibilityRules
+from rules.transformers.compatibility.consecutive_rules import ConsecutiveLayerCompatibilityRules
+from rules.transformers.compatibility.data_type_rules import DataTypeCompatibilityRules
+from rules.transformers.compatibility.tensor_acceptance_rules import TensorAcceptanceCompatibilityRules

@@ -1,0 +1,1 @@
+from rules.losses.compatibility.losses import LossCompatibilityRules

@@ -1,0 +1,5 @@
+from rules.attention.rnn_attention.parameter_rules import RNNAttentionParameterRules
+from rules.attention.rnn_attention.option_resolution_rules import RNNAttentionOptionResolutionRules
+from rules.attention.rnn_attention.compatibility_rules import RNNAttentionCompatibilityRules
+from rules.attention.rnn_attention.calculation_rules import RNNAttentionCalculationRules
+from rules.attention.rnn_attention.output_rules import RNNAttentionOutputRules

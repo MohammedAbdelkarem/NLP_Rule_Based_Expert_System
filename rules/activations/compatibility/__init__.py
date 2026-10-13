@@ -1,0 +1,3 @@
+from rules.activations.compatibility.relu_gelu import ActivationCompatibilityRules
+from rules.activations.compatibility.softmax import SoftmaxActivationCompatibilityRules
+from rules.activations.compatibility.sigmoid import SigmoidActivationCompatibilityRules

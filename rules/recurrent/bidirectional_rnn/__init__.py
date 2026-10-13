@@ -1,0 +1,4 @@
+from rules.recurrent.bidirectional_rnn.parameter_rules import BidirectionalRNNParameterRules
+from rules.recurrent.bidirectional_rnn.first_calculation_rules import BidirectionalRNNFirstCalculationRules
+from rules.recurrent.bidirectional_rnn.previous_calculation_rules import BidirectionalRNNPreviousCalculationRules
+from rules.recurrent.bidirectional_rnn.output_rules import BidirectionalRNNOutputRules

@@ -1,0 +1,3 @@
+from rules.activations.sigmoid.parameter_rules import SigmoidParameterRules
+from rules.activations.sigmoid.calculation_rules import SigmoidCalculationRules
+from rules.activations.sigmoid.output_rules import SigmoidOutputRules
